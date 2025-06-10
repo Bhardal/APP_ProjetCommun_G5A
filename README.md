@@ -1,1 +1,10 @@
-# APP_ProjetCommn_G5A
+# APP_ProjetCommun_G5A
+
+---
+
+## Rappel des groupes :
+- **A** : Lumière
+- **B** : Gaz
+- **C** : Son
+- **D** : Température / Humidité
+- **E** : Proximité
