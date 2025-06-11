@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Capteur de lumière</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Georgia, serif;
+      background: url("Resto.png") no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .capteur-container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      text-align: center;
+      max-width: 700px;
+      width: 95%;
+    }
+
+    h2 {
+      color: #800000;
+      margin-bottom: 20px;
+    }
+
+    .valeur-lum {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 15px 0;
+      color: #2C3E50;
+    }
+
+    .etat {
+      font-size: 18px;
+      margin: 10px 0;
+      color: #444;
+    }
+
+    .btn {
+      background-color: #800000;
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 25px;
+      font-size: 15px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    .btn:hover {
+      background-color: #a00d0d;
+    }
+
+    .controls {
+      margin-top: 20px;
+    }
+
+    label {
+      margin: 10px;
+      font-weight: bold;
+    }
+
+    input[type="number"] {
+      padding: 5px;
+      width: 80px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    .checkbox {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #2C3E50;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    canvas {
+      margin-top: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    a {
+      display: block;
+      margin-top: 25px;
+      color: #800000;
+      text-decoration: none;
+      font-size: 15px;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="capteur-container">
+    <h2>Gestion du capteur de lumière – Admin</h2>
+
+    <div class="valeur-lum">
+      Luminosité actuelle : <span id="valeur">---</span>
+    </div>
+
+    <div class="etat" id="etat-eclairage">💡 Éclairage : </div>
+
+    <div class="controls">
+      <button class="btn" onclick="simulerLectureCapteur(true)">Lire le capteur</button>
+      <button class="btn" onclick="toggleEclairageManuel()">ON/OFF manuel</button>
+      <label>Seuil : <input type="number" id="seuil" value="500"> lux</label>
+    </div>
+
+    <div class="checkbox">
+      <label><input type="checkbox" id="auto" onchange="reactiverAutomatique()"> Mode automatique (lecture toutes les 5 sec)</label>
+    </div>
+
+    <canvas id="graphiqueLumiere" height="120"></canvas>
+
+    <h3 style="margin-top: 25px;">Historique des lectures</h3>
+    <ul id="historique"></ul>
+
+    <a href="Accueil.html">← Retour à l'accueil</a>
+  </div>
+
+  <script>
+    let logs = [];
+    let seuil = 300;
+    let chart;
+    let eclairageManuel = false;
+
+    function simulerLectureCapteur(isManual = false) {
+      const valeur = Math.floor(Math.random() * 1000);
+      document.getElementById("valeur").textContent = valeur + " lux";
+      seuil = parseInt(document.getElementById("seuil").value);
+
+      if (!isManual && document.getElementById("auto").checked && !eclairageManuel) {
+        const etat = valeur < seuil ? "ON (auto)" : "OFF (auto)";
+        document.getElementById("etat-eclairage").textContent = "💡 Éclairage : " + etat;
+      }
+
+      const now = new Date().toLocaleTimeString();
+      logs.unshift(`${now} – ${valeur} lux`);
+      logs = logs.slice(0, 5);
+      document.getElementById("historique").innerHTML = logs.map(e => `<li>${e}</li>`).join("");
+
+      updateGraph(now, valeur);
+    }
+
+    function toggleEclairageManuel() {
+      eclairageManuel = !eclairageManuel;
+      const etat = eclairageManuel ? "ON (manuel)" : "OFF (manuel)";
+      document.getElementById("etat-eclairage").textContent = "💡 Éclairage : " + etat;
+    }
+
+    function reactiverAutomatique() {
+      if (document.getElementById("auto").checked) {
+        eclairageManuel = false;
+      }
+    }
+
+    function boucleAuto() {
+      if (document.getElementById("auto").checked && !eclairageManuel) {
+        simulerLectureCapteur();
+      }
+    }
+
+    function initGraph() {
+      const ctx = document.getElementById('graphiqueLumiere').getContext('2d');
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Luminosité (lux)',
+            data: [],
+            borderColor: '#800000',
+            backgroundColor: 'rgba(128, 0, 0, 0.1)',
+            tension: 0.2
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    function updateGraph(label, value) {
+      chart.data.labels.push(label);
+      chart.data.datasets[0].data.push(value);
+      if (chart.data.labels.length > 10) {
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.shift();
+      }
+      chart.update();
+    }
+
+    window.onload = () => {
+      initGraph();
+      setInterval(boucleAuto, 5000);
+    };
+  </script>
+
+</body>
+</html>
