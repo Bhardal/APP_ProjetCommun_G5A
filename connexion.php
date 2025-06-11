@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = "Identifiants incorrects.";
         } else {
             $_SESSION['user_id'] = $user['id'];
-            header("Location: Profil.php");
+            header("Location: Accueil.php");
             exit;
         }
     }
@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Connexion – Gusteau’s Restaurant</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        /* (Ton CSS existant) */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Georgia', serif; }
         body {
             background: url("Resto.png") no-repeat center center fixed;
@@ -54,21 +55,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         .errors { list-style: none; margin-bottom: 20px; }
         .errors li { color: #a00; margin-bottom: 5px; }
-        label {
-            display: block; margin-top: 15px;
-            color: #333; font-weight: bold;
-        }
+        label { display: block; margin-top: 15px; color: #333; font-weight: bold; }
         input {
             width: 100%; padding: 10px; margin-top: 8px;
-            border: 1px solid #ccc; border-radius: 8px;
-            font-size: 16px;
+            border: 1px solid #ccc; border-radius: 8px; font-size: 16px;
         }
         button {
             background-color: #800000; color: #fff;
             padding: 12px; margin-top: 25px; width: 100%;
-            border: none; border-radius: 25px;
-            font-size: 16px; cursor: pointer;
-            transition: background-color 0.3s ease;
+            border: none; border-radius: 25px; font-size: 16px;
+            cursor: pointer; transition: background-color 0.3s ease;
         }
         button:hover { background-color: #a00d0d; }
         .forgot-link, .register-link, .back-link {
@@ -101,13 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <form action="" method="post">
         <label for="email">Adresse e-mail</label>
-        <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                value="<?= htmlspecialchars($email) ?>"
-        >
+        <input type="email" id="email" name="email" required value="<?= htmlspecialchars($email) ?>">
 
         <label for="password">Mot de passe</label>
         <input type="password" id="password" name="password" required>
