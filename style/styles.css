@@ -1,0 +1,43 @@
+body {
+    font-family: Arial, sans-serif;
+     background: #f4f4f4;
+}
+.sensor-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px #ccc;
+}
+.sensor {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+.sensor:last-child {
+    border-bottom: none;
+}
+.sensor-name {
+    font-weight: bold;
+}
+.sensor-actions button, .sensor-actions a {
+    margin-left: 8px;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 4px;
+    background: #1976d2;
+    color: #fff;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+}
+.sensor-actions button.off {
+    background: #d32f2f;
+}
+.sensor-actions a {
+    background: #388e3c;
+}
