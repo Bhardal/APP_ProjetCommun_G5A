@@ -81,7 +81,14 @@ require 'config.php';
             margin-left: 15px; object-fit: cover;
             border: 2px solid #800000; cursor: pointer;
         }
-        /* Gestion des capteurs */
+        .sensor-link {
+            text-decoration: none;
+            color: inherit;
+        }
+        .sensor-link:hover {
+            text-decoration: underline;
+        }
+
         main {
             padding: 60px 20px;
             min-height: calc(100vh - 120px);
@@ -144,8 +151,13 @@ require 'config.php';
 
 
     <div class="buttons">
-        <a href="Inscription.php" class="btn">Inscription</a>
-        <a href="Connexion.php"   class="btn">Connexion</a>
+        <?php if (empty($_SESSION['user_id'])): ?>
+            <a href="Inscription.php" class="btn">Inscription</a>
+            <a href="Connexion.php"   class="btn">Connexion</a>
+        <?php else: ?>
+            <a href="logout.php"      class="btn secondary">Déconnexion</a>
+        <?php endif; ?>
+
         <a href="Profil.php">
             <img src="Profile.avif" alt="Profil" class="profile-icon">
         </a>
@@ -157,9 +169,15 @@ require 'config.php';
         <h1>Gestion des capteurs</h1>
         <div class="sensor-cards">
             <div class="sensor-card">
-                <h3>💡 Capteur de lumière</h3>
+                <h3>
+                    <a href="GestionCapteurLumiere.php" class="sensor-link">
+                        💡 Capteur de lumière
+                    </a>
+                </h3>
                 <p>Valeur actuelle : -- lux</p>
-                <a href="#" class="btn secondary">Rafraîchir</a>
+                <a href="GestionCapteurLumiere.php" class="btn secondary">
+                    Gérer ce capteur
+                </a>
             </div>
             <div class="sensor-card">
                 <h3>📏 Capteur de distance</h3>
