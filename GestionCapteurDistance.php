@@ -1,6 +1,7 @@
 <?php
 // GestionCapteurDistance.php
 require 'config.php';
+require_once './dbConnexion.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
