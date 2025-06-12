@@ -217,13 +217,21 @@
                     timeParts = dateTimeParts[1].split(":");
                 let date = new Date(dateParts[0], parseInt(dateParts[1], 10) - 1, dateParts[2], timeParts[0], timeParts[1], timeParts[2]);
 
+                const now = Math.floor(Date.now() / 1000);
                 return {
                     format: "generic",
-                    ts: date,
-                    series: ["Luminosite", "Luminosite"],
-                    unit: ["Lux", "Lux"],
-                    data: [[value, value]]
+                    ts: now,
+                    series: ["Luminosite"],
+                    unit: ["Lux"],
+                    data: [[value]]
                 };
+                // return {
+                //     format: "generic",
+                //     ts: now,
+                //     series: ["Temperature", "Humidity"],
+                //     unit: ["°C", "%"],
+                //     data: [[Math.random() * 30 + 10, Math.random() * 40 + 30]]
+                // };
             })
 
     }
