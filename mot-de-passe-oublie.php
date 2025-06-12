@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->Port       = 587;
 
                 // Expéditeur et destinataire
-                $mail->setFrom('huwilliam2601@gmail.com', 'Gusteau’s Restaurant');
+                $mail->setFrom('huwilliam2601@gmail.com', 'Gusteau Restaurant');
                 $mail->addAddress($email);
 
                 // Corps HTML et CSS inline
@@ -79,12 +79,12 @@ CSS;
   <div class="container">
     <h1>Reinitialisation de votre mot de passe</h1>
     <p>Bonjour,</p>
-    <p>Vous avez demandé à réinitialiser votre mot de passe pour <strong>Gusteau’s Restaurant</strong>.  
+    <p>Vous avez demandé à reinitialiser votre mot de passe pour <strong>Gusteau’s Restaurant</strong>.  
     Cliquez sur le bouton ci-dessous pour en choisir un nouveau (valide 1 heure) :</p>
     <p style="text-align:center;">
       <a href="$resetLink" class="button">Reinitialiser mon mot de passe</a>
     </p>
-    <p>Si vous n’avez pas demandé cette réinitialisation, ignorez simplement ce message.</p>
+    <p>Si vous n’avez pas demandé cette reinitialisation, ignorez simplement ce message.</p>
     <p>— L’équipe Gusteau’s Restaurant</p>
   </div>
 </body>
@@ -98,13 +98,13 @@ HTML;
                 $mail->AltBody = "Bonjour,\n\n"
                     . "Pour réinitialiser votre mot de passe, ouvrez ce lien :\n"
                     . "$resetLink\n\n"
-                    . "Si vous n'avez pas demandé cette réinitialisation, ignorez ce message.";
+                    . "Si vous n'avez pas demandé cette reinitialisation, ignorez ce message.";
 
                 $mail->send();
                 $success = true;
             } catch (Exception $e) {
                 error_log("Mailer Error: {$mail->ErrorInfo}");
-                $errors[] = "Impossible d'envoyer l'e-mail de réinitialisation.";
+                $errors[] = "Impossible d'envoyer l'e-mail de reinitialisation.";
             }
         }
     }
@@ -151,7 +151,7 @@ HTML;
 <div class="form-container">
     <h2>Mot de passe oublié</h2>
     <?php if ($success): ?>
-        <p>Un lien de réinitialisation vous a été envoyé par e-mail.</p>
+        <p>Un lien de reinitialisation vous a été envoyé par e-mail.</p>
     <?php else: ?>
         <?php if ($errors): ?>
             <ul class="errors">
