@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 
 try {
     $pdo = getConnection();
-    $stmt = $pdo->prepare("SELECT * FROM CapteurLumiere");
+    $stmt = $pdo->prepare("SELECT * FROM CapteurLumiere ORDER BY id DESC LIMIT 1");
     $stmt->execute();
 
     $allData = $stmt->fetchAll(PDO::FETCH_ASSOC);
