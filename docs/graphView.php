@@ -202,57 +202,77 @@
 
     // --- Simulated DB Query ---
     function fetchDataFromDatabase() {
-        const now = Math.floor(Date.now() / 1000);
-        return {
-            format: "generic",
-            ts: now,
-            series: ["Temperature", "Humidity"],
-            unit: ["°C", "%"],
-            data: [[Math.random() * 30 + 10, Math.random() * 40 + 30]]
-        };
+        return fetch('getData.php')
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                let last = data[data.length-1]
+                let id = last.id;
+                let value = last.intensite;
+                var dateString = last.date,
+                    dateTimeParts = dateString.split(" "),
+                    dateParts = dateTimeParts[0].split("-"),
+                    timeParts = dateTimeParts[1].split(":");
+                let date = new Date(dateParts[0], parseInt(dateParts[1], 10) - 1, dateParts[2], timeParts[0], timeParts[1], timeParts[2]);
+
+                return {
+                    format: "generic",
+                    ts: date,
+                    series: ["Luminosite", "Luminosite"],
+                    unit: ["Lux", "Lux"],
+                    data: [[value, value]]
+                };
+            })
+
     }
 
     // --- Main Update Loop ---
     function update() {
-        const rawJson = fetchDataFromDatabase();
-        count+=1;
-        currentTime = new Date(parseFloat(rawJson["ts"])*1000);
-        time.push(currentTime);
-        handleFormat_generic(rawJson);
-        if (count > paramMaxDataDisplay && allowPanFalse) {
-            allowPanFalse = 0;
-            graph.options.plugins.zoom.pan.onPanStart = () => {
-                graph.config._config.options.scales.x.min = time[0];
-                graph.config._config.options.plugins.zoom.limits.x.min = time[0];
-            };
-            graph.options.plugins.zoom.pan.onPan = () => {
-                let vMin = Infinity;
-                let vMax = 0;
-                indexStart = time.indexOf(time.find(d => Math.floor(d.getTime()/1000) == Math.floor(graph.config._config.options.scales.x.min/1000)));
-                indexEnd = time.indexOf(time.find(d => Math.floor(d.getTime()/1000) == Math.floor(graph.config._config.options.scales.x.max/1000)));
-                for (let i = 0; i < data1.length; i++) {
-                    if (data2.length > 0) {
-                        vMin = Math.min(vMin, Math.min.apply(null, data1[i].slice(indexStart, indexEnd)), Math.min.apply(null, data2[i].slice(indexStart, indexEnd)));
-                        vMax = Math.max(vMax, Math.max.apply(null, data1[i].slice(indexStart, indexEnd)), Math.max.apply(null, data2[i].slice(indexStart, indexEnd)));
-                    } else {
-                        vMin = Math.min(vMin, Math.min.apply(null, data1[i].slice(indexStart, indexEnd)));
-                        vMax = Math.max(vMax, Math.max.apply(null, data1[i].slice(indexStart, indexEnd)));
+        fetchDataFromDatabase()
+            .then(rawJson => {
+
+                console.debug("rawJson: ", rawJson);
+                count+=1;
+                currentTime = new Date(parseFloat(rawJson["ts"])*1000);
+                time.push(currentTime);
+                handleFormat_generic(rawJson);
+                if (count > paramMaxDataDisplay && allowPanFalse) {
+                    allowPanFalse = 0;
+                    graph.options.plugins.zoom.pan.onPanStart = () => {
+                        graph.config._config.options.scales.x.min = time[0];
+                        graph.config._config.options.plugins.zoom.limits.x.min = time[0];
+                    };
+                    graph.options.plugins.zoom.pan.onPan = () => {
+                        let vMin = Infinity;
+                        let vMax = 0;
+                        indexStart = time.indexOf(time.find(d => Math.floor(d.getTime()/1000) == Math.floor(graph.config._config.options.scales.x.min/1000)));
+                        indexEnd = time.indexOf(time.find(d => Math.floor(d.getTime()/1000) == Math.floor(graph.config._config.options.scales.x.max/1000)));
+                        for (let i = 0; i < data1.length; i++) {
+                            if (data2.length > 0) {
+                                vMin = Math.min(vMin, Math.min.apply(null, data1[i].slice(indexStart, indexEnd)), Math.min.apply(null, data2[i].slice(indexStart, indexEnd)));
+                                vMax = Math.max(vMax, Math.max.apply(null, data1[i].slice(indexStart, indexEnd)), Math.max.apply(null, data2[i].slice(indexStart, indexEnd)));
+                            } else {
+                                vMin = Math.min(vMin, Math.min.apply(null, data1[i].slice(indexStart, indexEnd)));
+                                vMax = Math.max(vMax, Math.max.apply(null, data1[i].slice(indexStart, indexEnd)));
+                            };
+                        };
+                        console.debug("min: ",Math.floor(vMin*10)/10, "max:      ",Math.ceil(vMax*10)/10);
+                        if (Math.abs(vMin) == Infinity){
+                            return;
+                        }
+                        graph.zoomScale("y", {min: Math.floor(vMin*10)/10, max: Math.ceil(vMax*10)/10}, "none");
                     };
                 };
-                console.debug("min: ",Math.floor(vMin*10)/10, "max:      ",Math.ceil(vMax*10)/10);
-                if (Math.abs(vMin) == Infinity){
-                    return;
-                }
-                graph.zoomScale("y", {min: Math.floor(vMin*10)/10, max: Math.ceil(vMax*10)/10}, "none");
-            };
-        };
-        if ((graph.isZoomedOrPanned() == false)) {
-            graph.resetZoom();
-            graph.config._config.options.scales.x.min = new Date(currentTime-paramMaxDataDisplay*paramRefreshTime);
-            graph.config._config.options.plugins.zoom.limits.x.min = new Date(currentTime-paramMaxDataDisplay*paramRefreshTime);
-            graph.config._config.options.scales.x.max = new Date(currentTime);
-        };
-        graph.update();
+                if ((graph.isZoomedOrPanned() == false)) {
+                    graph.resetZoom();
+                    graph.config._config.options.scales.x.min = new Date(currentTime-paramMaxDataDisplay*paramRefreshTime);
+                    graph.config._config.options.plugins.zoom.limits.x.min = new Date(currentTime-paramMaxDataDisplay*paramRefreshTime);
+                    graph.config._config.options.scales.x.max = new Date(currentTime);
+                };
+                graph.update();
+            });
     };
 
     function createGraph() {
