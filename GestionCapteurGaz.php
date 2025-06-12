@@ -4,10 +4,10 @@ require 'config.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-if (empty($_SESSION['user_id'])) {
-    header('Location: Connexion.php');
-    exit;
-}
+// if (empty($_SESSION['user_id'])) {
+//     header('Location: Connexion.php');
+//     exit;
+// }
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -152,20 +152,49 @@ if (empty($_SESSION['user_id'])) {
 <script>
     let logs = [], actionManuel = false, chart;
 
+    function fetchDataFromDatabase() {
+        return fetch('./docs/getDataGaz.php')
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                let last = data[data.length-1]
+                let id = last.id;
+                let value = last.intensite;
+                var dateString = last.date,
+                    dateTimeParts = dateString.split(" "),
+                    dateParts = dateTimeParts[0].split("-"),
+                    timeParts = dateTimeParts[1].split(":");
+                let date = new Date(dateParts[0], parseInt(dateParts[1], 10) - 1, dateParts[2], timeParts[0], timeParts[1], timeParts[2]);
+
+                const now = Math.floor(Date.now() / 1000);
+                return {
+                    ts: now,
+                    data: value
+                };
+            })
+
+    }
+
     function simulerLectureGaz(isManual) {
-        const val = Math.floor(Math.random()*500); // simulation ppm
-        document.getElementById('valeur').textContent = val + ' ppm';
-        const seuil = parseInt(document.getElementById('seuil').value,10);
-        if (!isManual && document.getElementById('auto').checked && !actionManuel) {
-            document.getElementById('etat-action').textContent =
-                '🛢️ Action : ' + (val < seuil ? 'ON (auto)' : 'OFF (auto)');
-        }
-        const now = new Date().toLocaleTimeString();
-        logs.unshift(`${now} – ${val} ppm`);
-        logs = logs.slice(0,5);
-        document.getElementById('historique').innerHTML =
-            logs.map(e=>`<li>${e}</li>`).join('');
-        updateGraph(now,val);
+        // const val = Math.floor(Math.random()*500); // simulation ppm
+        fetchDataFromDatabase()
+            .then(datas => {
+                const val = datas.data;
+                document.getElementById('valeur').textContent = val + ' ppm';
+                const seuil = parseInt(document.getElementById('seuil').value,10);
+                if (!isManual && document.getElementById('auto').checked && !actionManuel) {
+                    document.getElementById('etat-action').textContent =
+                        '🛢️ Action : ' + (val < seuil ? 'ON (auto)' : 'OFF (auto)');
+                }
+                const now = new Date().toLocaleTimeString();
+                logs.unshift(`${now} – ${val} ppm`);
+                logs = logs.slice(0,5);
+                document.getElementById('historique').innerHTML =
+                    logs.map(e=>`<li>${e}</li>`).join('');
+                updateGraph(now,val);
+            });
     }
 
     function toggleActionManuelle() {
