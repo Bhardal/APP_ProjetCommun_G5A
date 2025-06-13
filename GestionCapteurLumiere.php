@@ -178,7 +178,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <div class="controls">
         <button class="btn" onclick="simulerLectureCapteur(false)">Lire le capteur</button>
         <button class="btn" onclick="toggleEclairageManuel()">ON/OFF manuel</button>
-        <label>Seuil : <input type="number" id="seuil" value="500"> lux</label>
+        <label>Seuil : <input type="number" id="seuil" value="350"> lux</label>
     </div>
 
     <div class="checkbox">
@@ -239,8 +239,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         document.getElementById('etat-eclairage').textContent =
                             '💡 Éclairage : ON (auto)';
                     } else if (val > seuil && val < seuilMaxLum) {
-                        document.getElementById('etat-eclairage').textContent =
-                            '💡 Éclairage : ON (auto)';
+                        ;
                     } else {
                         document.getElementById('etat-eclairage').textContent =
                             '💡 Éclairage : OFF (auto)';
