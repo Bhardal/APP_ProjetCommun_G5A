@@ -143,6 +143,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <a href="Accueil.php">Accueil</a>
             <a href="GestionCapteurs.php">Gestion de capteurs</a>
             <a href="faq.php">FAQ</a>
+            <a href="cgu.php">CGU</a>
         </div>
     </div>
     <a href="Accueil.php" class="logo-area">
