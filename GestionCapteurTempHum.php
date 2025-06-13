@@ -171,7 +171,7 @@ if (empty($_SESSION['user_id'])) {
     <div class="controls">
         <button class="btn" onclick="simulerLecture(false)">Lire capteurs</button>
         <button class="btn" onclick="toggleManuel()">ON/OFF manuel</button>
-        <label>Seuil T : <input type="number" id="seuilT" value="25"> °C</label>
+        <label>Seuil T : <input type="number" id="seuilT" value="25"> °C</label><br>
         <label>Seuil H : <input type="number" id="seuilH" value="50"> %</label>
     </div>
 
