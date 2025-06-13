@@ -14,9 +14,9 @@ $email  = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 1. Récupère et valide
-    $nom    = trim($_POST['nom'] ?? '');
-    $prenom = trim($_POST['prenom'] ?? '');
-    $email  = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
+    $nom    = htmlspecialchars(trim($_POST['nom'] ?? ''));
+    $prenom = htmlspecialchars(trim($_POST['prenom'] ?? ''));
+    $email  = htmlspecialchars(filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL));
     $p1     = $_POST['password'] ?? '';
     $p2     = $_POST['confirm-password'] ?? '';
 
