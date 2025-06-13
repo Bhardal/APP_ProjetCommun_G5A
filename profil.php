@@ -5,14 +5,54 @@ ini_set('display_startup_errors',1);
 error_reporting(E_ALL);
 
 require 'config.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (empty($_SESSION['user_id'])) {
     header('Location: Connexion.php');
     exit;
 }
 
-// Récupère les infos de l’utilisateur
+$userId = $_SESSION['user_id'];
+$errors = [];
+$success = false;
+
+// Traitement du formulaire de mise à jour
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nom    = trim($_POST['nom']    ?? '');
+    $prenom = trim($_POST['prenom'] ?? '');
+    $email  = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
+
+    if ($nom === '' || $prenom === '') {
+        $errors[] = 'Nom et prénom obligatoires.';
+    }
+    if (!$email) {
+        $errors[] = 'E-mail invalide.';
+    }
+
+    if (empty($errors)) {
+        try {
+            $stmt = $pdo->prepare("
+                UPDATE users
+                SET nom = :nom, prenom = :prenom, email = :email
+                WHERE id = :id
+            ");
+            $stmt->execute([
+                ':nom'    => $nom,
+                ':prenom' => $prenom,
+                ':email'  => $email,
+                ':id'     => $userId,
+            ]);
+            $success = true;
+        } catch (PDOException $e) {
+            $errors[] = "Erreur lors de la mise à jour : " . $e->getMessage();
+        }
+    }
+}
+
+// Rechargement des infos utilisateur
 $stmt = $pdo->prepare("SELECT nom, prenom, email, created_at FROM users WHERE id = ?");
-$stmt->execute([$_SESSION['user_id']]);
+$stmt->execute([$userId]);
 $user = $stmt->fetch();
 ?>
 <!DOCTYPE html>
@@ -32,7 +72,48 @@ $user = $stmt->fetch();
             align-items:center;
             border-bottom:1px solid #ccc;
         }
-        /* Logo cliquable */
+        /* Dropdown */
+        .dropdown {
+            position: relative;
+            margin-right: 20px;
+        }
+        .dropbtn {
+            background-color: #800000;
+            color: #fff;
+            padding: 10px 18px;
+            font-size: 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .dropbtn:hover {
+            background-color: #a00d0d;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 110%;
+            left: 0;
+            background-color: #fff;
+            min-width: 180px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        .dropdown-content.show {
+            display: block;
+        }
+        .dropdown-content a {
+            display: block;
+            padding: 10px 15px;
+            color: #800000;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .dropdown-content a:hover {
+            background-color: #f5f5f5;
+        }
         a.logo-area{
             display:flex;
             align-items:center;
@@ -40,10 +121,8 @@ $user = $stmt->fetch();
             color:inherit;
             user-select:none;
         }
-        a.logo-area:focus{outline:none;}
-        .logo-area img{width:50px;height:auto;margin-right:15px;}
+        a.logo-area img{width:50px;height:auto;margin-right:15px;}
         .logo-text{font-size:24px;font-weight:bold;color:#800000;}
-        /* Boutons */
         .buttons{display:flex;align-items:center;}
         .btn{
             background:#800000;color:#fff;
@@ -64,7 +143,6 @@ $user = $stmt->fetch();
             margin-left:15px;object-fit:cover;
             border:2px solid #800000;cursor:pointer;
         }
-        /* Contenu principal */
         main{
             width:100%;min-height:100vh;
             background:url("Resto.png") center/cover no-repeat;
@@ -86,23 +164,55 @@ $user = $stmt->fetch();
             text-align:center;
         }
         .content h1{font-size:28px;color:#2C3E50;margin-bottom:20px;}
-        .content p{font-size:18px;color:#444;margin:10px 0;}
+        .content form { text-align: left; }
+        .content label { display: block; margin: 12px 0 6px; font-weight: bold; }
+        .content input {
+            width:100%; padding:8px; border:1px solid #ccc; border-radius:8px;
+            font-size: 15px;
+        }
+        .content button {
+            background:#800000; color:#fff; padding:10px 18px;
+            border:none; border-radius:20px; cursor:pointer;
+            margin-top:20px; width:100%;
+            transition:all .3s;
+        }
+        .content button:hover { background: #a00d0d; }
+        .errors { text-align:left; color:#a00; margin-bottom:20px; }
         footer{background:#2C3E50;color:#fff;padding:20px;text-align:center;font-size:14px;}
+        @media (max-width:600px) {
+            .content { padding:20px; }
+        }
+        footer {
+            background-color:#2C3E50; color:#fff;
+            padding:20px; text-align:center; font-size:14px;
+        }
+        @media (max-width:768px) {
+            header { flex-wrap:wrap; }
+            .sensor-cards { flex-direction:column; align-items:center; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <!-- Logo cliquable vers l'accueil -->
+    <?php if (!empty($_SESSION['user_id'])): ?>
+        <!-- Menu déroulant (visible uniquement quand connecté) -->
+        <div class="dropdown">
+            <button class="dropbtn">Menu</button>
+            <div class="dropdown-content">
+                <a href="Accueil.php">Accueil</a>
+                <a href="GestionCapteurs.php">Gestion de capteurs</a>
+                <a href="faq.php">FAQ</a>
+                <a href="cgu.php">CGU</a>
+            </div>
+        </div>
+    <?php endif; ?>
     <a href="Accueil.php" class="logo-area">
         <img src="GUSTEAU'S.jpg" alt="Logo Gusteau">
         <div class="logo-text">GUSTEAU'S RESTAURANT</div>
     </a>
-
     <div class="buttons">
-        <!-- Bouton Déconnexion -->
         <a href="logout.php" class="btn secondary">Se déconnecter</a>
-        <!-- Icône Profil (reste cliquable sur profil) -->
         <a href="Profil.php">
             <img src="Profile.avif" alt="Profil" class="profile-icon">
         </a>
@@ -113,17 +223,60 @@ $user = $stmt->fetch();
     <div class="overlay">
         <div class="content">
             <h1>Mon Profil</h1>
-            <p><strong>Nom :</strong> <?= htmlspecialchars($user['nom']) ?></p>
-            <p><strong>Prénom :</strong> <?= htmlspecialchars($user['prenom']) ?></p>
-            <p><strong>E-mail :</strong> <?= htmlspecialchars($user['email']) ?></p>
-            <p><strong>Inscrit le :</strong> <?= htmlspecialchars($user['created_at']) ?></p>
+
+            <?php if ($success): ?>
+                <p style="color:green;">Profil mis à jour avec succès !</p>
+            <?php endif; ?>
+
+            <?php if ($errors): ?>
+                <ul class="errors">
+                    <?php foreach ($errors as $e): ?>
+                        <li><?= htmlspecialchars($e) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+
+            <form method="post">
+                <label for="nom">Nom</label>
+                <input type="text" id="nom" name="nom"
+                       value="<?= htmlspecialchars($user['nom']) ?>" required>
+
+                <label for="prenom">Prénom</label>
+                <input type="text" id="prenom" name="prenom"
+                       value="<?= htmlspecialchars($user['prenom']) ?>" required>
+
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email"
+                       value="<?= htmlspecialchars($user['email']) ?>" required>
+
+                <label>Inscrit le</label>
+                <input type="text" value="<?= htmlspecialchars($user['created_at']) ?>" disabled>
+
+                <button type="submit">Enregistrer les modifications</button>
+            </form>
         </div>
     </div>
 </main>
 
 <footer>
-    &copy; 2025 Gusteau’s Restaurant — Tous droits réservés
+    &copy; 2025 Gusteau’s Restaurant — Tous droits réservés | Version 1.0<br>
+    🔐 Site sécurisé — ♿ Accessible à tous les profils
 </footer>
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const dropbtn = document.querySelector('.dropbtn');
+        const menu    = document.querySelector('.dropdown-content');
+
+        dropbtn.addEventListener('click', function(e){
+            e.stopPropagation();
+            menu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(){
+            menu.classList.remove('show');
+        });
+    });
+</script>
 
 </body>
 </html>

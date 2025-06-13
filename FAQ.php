@@ -278,6 +278,14 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="faq-answer">Envoyez un e-mail à l’équipe technique via contact@gusteaus-restaurant.com</div>
     </div>
 
+    <div class="faq-item">
+        <div class="faq-question">
+            <span>Comment signaler un bug ?</span>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">Envoyez un e-mail à l’équipe technique via contact@gusteaus-restaurant.com</div>
+    </div>
+
 </div>
 <script>
     // Dropdown
