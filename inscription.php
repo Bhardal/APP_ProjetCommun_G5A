@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </ul>
     <?php endif; ?>
 
-    <form action="" method="post">
+    <form action="" method="post" onsubmit="return validateForm()">
         <label for="nom">Nom</label>
         <input type="text" id="nom" name="nom" required
                value="<?= htmlspecialchars($nom) ?>">
@@ -155,5 +155,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <a href="Connexion.php" class="login-link">← Déjà un compte ? Se connecter</a>
     <a href="Accueil.php"   class="back-link">← Retour à l'accueil</a>
 </div>
+<script>
+    function validateForm() {
+        const p1 = document.getElementById('password').value;
+        const p2 = document.getElementById('confirm-password').value;
+        if (p1.length < 6) {
+            alert('Le mot de passe doit contenir au moins 6 caractères.');
+            return false;
+        }
+        if (p1 !== p2) {
+            alert('Les mots de passe ne correspondent pas.');
+            return false;
+        }
+        return true; // tout est OK, le formulaire peut être soumis
+    }
+</script>
+
 </body>
 </html>
