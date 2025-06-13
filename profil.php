@@ -51,9 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Rechargement des infos utilisateur
-$stmt = $pdo->prepare("SELECT nom, prenom, email, created_at FROM users WHERE id = ?");
-$stmt->execute([$userId]);
-$user = $stmt->fetch();
+try {
+    $stmt = $pdo->prepare("SELECT nom, prenom, email, created_at FROM users WHERE id = ?");
+    $stmt->execute([$userId]);
+    $user = $stmt->fetch();
+
+} catch(PDOException $e){
+    echo "Erreur de connexion à la base de donnée : " . $e->getMessage();
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">

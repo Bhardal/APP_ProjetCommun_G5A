@@ -10,40 +10,45 @@ if (!$token) {
     die('Token manquant');
 }
 
-// Vérifier token + expiration
-$stmt = $pdo->prepare("
-  SELECT id 
-  FROM users 
-  WHERE reset_token = ? 
-    AND reset_expires > NOW()
-");
-$stmt->execute([$token]);
-$user = $stmt->fetch();
+// Vérifier token + expirationy
+try {
+    $stmt = $pdo->prepare("
+    SELECT id
+    FROM users
+    WHERE reset_token = ?
+        AND reset_expires > NOW()
+    ");
+    $stmt->execute([$token]);
+    $user = $stmt->fetch();
 
-if (!$user) {
-    die('Lien invalide ou expiré.');
-}
+    if (!$user) {
+        die('Lien invalide ou expiré.');
+    }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $p1 = $_POST['password'] ?? '';
-    $p2 = $_POST['confirm_password'] ?? '';
-    if (strlen($p1) < 6) {
-        $errors[] = "Le mot de passe doit faire au moins 6 caractères.";
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $p1 = $_POST['password'] ?? '';
+        $p2 = $_POST['confirm_password'] ?? '';
+        if (strlen($p1) < 6) {
+            $errors[] = "Le mot de passe doit faire au moins 6 caractères.";
+        }
+        if ($p1 !== $p2) {
+            $errors[] = "Les mots de passe ne correspondent pas.";
+        }
+        if (empty($errors)) {
+            // Mettre à jour mot de passe + nettoyer token
+            $hash = password_hash($p1, PASSWORD_DEFAULT);
+            $stmt = $pdo->prepare("
+            UPDATE users
+            SET password = ?, reset_token = NULL, reset_expires = NULL
+            WHERE id = ?
+            ");
+            $stmt->execute([$hash, $user['id']]);
+            $success = true;
+        }
     }
-    if ($p1 !== $p2) {
-        $errors[] = "Les mots de passe ne correspondent pas.";
-    }
-    if (empty($errors)) {
-        // Mettre à jour mot de passe + nettoyer token
-        $hash = password_hash($p1, PASSWORD_DEFAULT);
-        $stmt = $pdo->prepare("
-          UPDATE users 
-          SET password = ?, reset_token = NULL, reset_expires = NULL
-          WHERE id = ?
-        ");
-        $stmt->execute([$hash, $user['id']]);
-        $success = true;
-    }
+
+} catch(PDOException $e){
+    echo "Erreur de connexion à la base de donnée : " . $e->getMessage();
 }
 ?>
 <!DOCTYPE html>
