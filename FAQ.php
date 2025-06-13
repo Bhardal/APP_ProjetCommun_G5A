@@ -236,6 +236,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="dropdown-content">
             <a href="Accueil.php">Accueil</a>
             <a href="GestionCapteurs.php">Gestion de capteurs</a>
+            <a href="faq.php">FAQ</a>
             <a href="cgu.php">CGU</a>
         </div>
     </div>

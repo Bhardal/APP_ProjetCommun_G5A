@@ -18,7 +18,7 @@ if (empty($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Georgia',serif; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Georgia', serif; }
         body {
             background: url("Resto.png") no-repeat center center fixed;
             background-size: cover;
@@ -31,22 +31,51 @@ if (empty($_SESSION['user_id'])) {
             border-bottom:1px solid #ccc;
             position: sticky; top:0; z-index:10;
         }
+
+        /* Dropdown */
+        .dropdown { position: relative; margin-right:20px; }
+        .dropbtn {
+            background-color: #800000; color:#fff;
+            padding:10px 18px; font-size:15px;
+            border:none; border-radius:4px; cursor:pointer;
+            transition:background 0.3s;
+        }
+        .dropbtn:hover { background-color:#a00d0d; }
+        .dropdown-content {
+            display:none!important;
+            position:absolute; top:110%; left:0;
+            background:#fff; min-width:180px;
+            border:1px solid #ccc;
+            box-shadow:0 4px 8px rgba(0,0,0,0.1);
+            z-index:100;
+        }
+        .dropdown-content.show { display:block!important; }
+        .dropdown-content a {
+            display:block; padding:10px 15px;
+            color:#800000; text-decoration:none; font-size:14px;
+        }
+        .dropdown-content a:hover { background:#faf4f1; }
+
+        /* Logo */
         a.logo-area {
-            display:flex; align-items:center;
-            text-decoration:none; color:inherit; user-select:none;
+            display:flex; align-items:center; text-decoration:none; color:inherit;
         }
         a.logo-area img { width:50px; margin-right:15px; }
         .logo-text { font-size:24px; font-weight:bold; }
+
+        /* Boutons de droite */
         .buttons { margin-left:auto; display:flex; align-items:center; }
         .btn {
-            background:#800000; color:#fff; padding:10px 18px;
-            border:none;border-radius:20px; margin-left:15px;
-            text-decoration:none; transition:all .3s; animation:pulse 2.5s infinite;
+            background:#800000; color:#fff;
+            padding:10px 18px; border:none; border-radius:20px;
+            margin-left:15px; text-decoration:none;
+            transition:all .3s; animation:pulse 2.5s infinite;
             font-size:15px;
         }
         .btn:hover { background:#a00d0d; transform:scale(1.05); }
         .btn.secondary {
-            background:#fff; color:#800000; border:2px solid #800000; animation:none;
+            background:#fff; color:#800000; border:2px solid #800000;
+            animation:none;
         }
         .btn.secondary:hover { background:#f5f5f5; }
         @keyframes pulse {
@@ -58,23 +87,19 @@ if (empty($_SESSION['user_id'])) {
             margin-left:15px; object-fit:cover;
             border:2px solid #800000; cursor:pointer;
         }
+
         .capteur-container {
-            background: rgba(255,255,255,0.95);
+            background:rgba(255,255,255,0.95);
             padding:40px; border-radius:15px;
             box-shadow:0 0 15px rgba(0,0,0,0.2);
             text-align:center; max-width:700px; width:95%;
             margin:40px auto;
         }
-        .capteur-container h2 {
-            color:#800000; margin-bottom:20px;
-        }
+        .capteur-container h2 { color:#800000; margin-bottom:20px; }
         .valeur-son {
-            font-size:24px; font-weight:bold;
-            margin:15px 0; color:#2C3E50;
+            font-size:24px; font-weight:bold; margin:15px 0; color:#2C3E50;
         }
-        .etat {
-            font-size:18px; margin:10px 0; color:#444;
-        }
+        .etat { font-size:18px; margin:10px 0; color:#444; }
         .controls { margin-top:20px; }
         .controls .btn { margin:10px; }
         label { margin:0 10px; font-weight:bold; }
@@ -94,27 +119,38 @@ if (empty($_SESSION['user_id'])) {
             font-size:14px; color:#333;
         }
         a.back {
-            display:block; margin-top:25px;
-            color:#800000; text-decoration:none; font-size:15px;
+            display:block; margin-top:25px; color:#800000;
+            text-decoration:none; font-size:15px;
         }
         a.back:hover { text-decoration:underline; }
+
         footer {
-            background-color:#2C3E50; color:#fff;
-            padding:20px; text-align:center; font-size:14px;
+            background:#2C3E50; color:#fff; padding:20px; text-align:center; font-size:14px;
         }
         @media (max-width:768px) {
             header { flex-wrap:wrap; }
-            .sensor-cards { flex-direction:column; align-items:center; }
         }
     </style>
 </head>
 <body>
 
 <header>
+    <!-- Menu déroulant -->
+    <div class="dropdown">
+        <button class="dropbtn">Menu</button>
+        <div class="dropdown-content">
+            <a href="Accueil.php">Accueil</a>
+            <a href="GestionCapteurs.php">Gestion de capteurs</a>
+            <a href="faq.php">FAQ</a>
+            <a href="cgu.php">CGU</a>
+        </div>
+    </div>
+
     <a href="Accueil.php" class="logo-area">
         <img src="GUSTEAU'S.jpg" alt="Logo Gusteau">
         <div class="logo-text">GUSTEAU'S RESTAURANT</div>
     </a>
+
     <div class="buttons">
         <?php if(empty($_SESSION['user_id'])): ?>
             <a href="Inscription.php" class="btn">Inscription</a>
@@ -159,6 +195,18 @@ if (empty($_SESSION['user_id'])) {
 </div>
 
 <script>
+    // Dropdown toggle
+    document.addEventListener('DOMContentLoaded', () => {
+        const btn  = document.querySelector('.dropbtn');
+        const menu = document.querySelector('.dropdown-content');
+        btn.addEventListener('click', e => {
+            e.stopPropagation();
+            menu.classList.toggle('show');
+        });
+        document.addEventListener('click', () => menu.classList.remove('show'));
+    });
+
+
     let logs = [], actionManuel = false, chart;
 
     function fetchDataFromDatabase() {
