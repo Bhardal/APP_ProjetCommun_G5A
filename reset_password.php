@@ -138,7 +138,7 @@ try {
             </ul>
         <?php endif; ?>
 
-        <form method="post">
+        <form method="post" onsubmit="return validateReset()">
             <label for="password">Nouveau mot de passe</label>
             <input type="password" id="password" name="password" required>
 
@@ -151,5 +151,21 @@ try {
 
     <a href="Connexion.php" class="back-link">← Retour à la connexion</a>
 </div>
+<script>
+    function validateReset() {
+        const p1 = document.getElementById('password').value;
+        const p2 = document.getElementById('confirm_password').value;
+        if (p1.length < 6) {
+            alert('Le mot de passe doit contenir au moins 6 caractères.');
+            return false;
+        }
+        if (p1 !== p2) {
+            alert('Les mots de passe ne correspondent pas.');
+            return false;
+        }
+        return true;
+    }
+</script>
+
 </body>
 </html>
