@@ -99,25 +99,35 @@ if (session_status() === PHP_SESSION_NONE) {
             font-size: 24px;
             font-weight: bold;
         }
-        /* Buttons */
+        /* Boutons de droite */
         .buttons {
             margin-left: auto;
             display: flex;
             align-items: center;
         }
-        .btn, .dropbtn {
-            transition: background-color 0.3s;
+        .btn {
+            background-color: #800000;
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 20px;
+            margin-left: 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            animation: pulse 2.5s infinite;
+            font-size: 15px;
         }
-        .btn:hover, .dropbtn:hover {
-            background-color: var(--hover-color);
+        .btn:hover {
+            background-color: #a00d0d;
+            transform: scale(1.05);
         }
         .btn.secondary {
-            background: #fff;
-            color: var(--main-color);
-            border: 2px solid var(--main-color);
+            background-color: #fff;
+            color: #800000;
+            border: 2px solid #800000;
+            animation: none;
         }
         .btn.secondary:hover {
-            background: #faf4f1;
+            background-color: #f5f5f5;
         }
         .profile-icon {
             width: 40px; height: 40px;
@@ -208,6 +218,14 @@ if (session_status() === PHP_SESSION_NONE) {
             h1 { font-size: 2rem; }
             .faq-question { font-size: 1.1rem; }
         }
+        footer {
+            background-color:#2C3E50; color:#fff;
+            padding:20px; text-align:center; font-size:14px;
+        }
+        @media (max-width:768px) {
+            header { flex-wrap:wrap; }
+            .sensor-cards { flex-direction:column; align-items:center; }
+        }
     </style>
 </head>
 <body>
@@ -261,11 +279,6 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
 
 </div>
-
-<footer>
-    &copy; 2025 Gusteau’s Restaurant — Tous droits réservés.
-</footer>
-
 <script>
     // Dropdown
     document.addEventListener('DOMContentLoaded', () => {
@@ -288,6 +301,10 @@ if (session_status() === PHP_SESSION_NONE) {
         });
     });
 </script>
+<footer>
+    &copy; 2025 Gusteau’s Restaurant — Tous droits réservés | Version 1.0<br>
+    🔐 Site sécurisé — ♿ Accessible à tous les profils
+</footer>
 
 </body>
 </html>

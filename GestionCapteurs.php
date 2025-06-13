@@ -207,7 +207,8 @@ if (session_status() === PHP_SESSION_NONE) {
 </main>
 
 <footer>
-    &copy; 2025 Gusteau’s Restaurant — Tous droits réservés | Version 1.0
+    &copy; 2025 Gusteau’s Restaurant — Tous droits réservés | Version 1.0<br>
+    🔐 Site sécurisé — ♿ Accessible à tous les profils
 </footer>
 
 <!-- Script d'ouverture/fermeture du dropdown -->

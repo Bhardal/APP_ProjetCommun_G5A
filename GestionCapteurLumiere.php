@@ -133,6 +133,14 @@ if (session_status() === PHP_SESSION_NONE) {
             color: #800000; text-decoration: none; font-size: 15px;
         }
         a.back:hover { text-decoration: underline; }
+        footer {
+            background-color:#2C3E50; color:#fff;
+            padding:20px; text-align:center; font-size:14px;
+        }
+        @media (max-width:768px) {
+            header { flex-wrap:wrap; }
+            .sensor-cards { flex-direction:column; align-items:center; }
+        }
     </style>
 </head>
 <body>
@@ -187,7 +195,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <a href="GestionCapteurs.php" class="back">← Retour à la gestion des capteurs</a>
 
-
+</div>
     <script>
     let logs = [], eclairageManuel = false, chart;
     let seuilMaxLum = 1500;
@@ -300,5 +308,10 @@ if (session_status() === PHP_SESSION_NONE) {
         setInterval(boucleAuto, 5000);
     };
 </script>
+<footer>
+    &copy; 2025 Gusteau’s Restaurant — Tous droits réservés | Version 1.0<br>
+    🔐 Site sécurisé — ♿ Accessible à tous les profils
+</footer>
+
 </body>
 </html>

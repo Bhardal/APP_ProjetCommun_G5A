@@ -57,19 +57,36 @@ if (session_status() === PHP_SESSION_NONE) {
         }
         .logo-area img { width:50px; margin-right:15px; }
         .logo-text { font-size:24px; font-weight:bold; }
-        .buttons { margin-left:auto; display:flex; align-items:center; }
+        /* Boutons de droite */
+        .buttons {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
         .btn {
-            background:#800000; color:#fff; padding:10px 18px;
-            border:none; border-radius:20px; margin-left:15px;
-            text-decoration:none; transition:all .3s; animation:pulse 2.5s infinite;
-            font-size:15px;
+            background-color: #800000;
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 20px;
+            margin-left: 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            animation: pulse 2.5s infinite;
+            font-size: 15px;
         }
-        .btn:hover, .dropbtn:hover { background: #a00d0d; }
+        .btn:hover {
+            background-color: #a00d0d;
+            transform: scale(1.05);
+        }
         .btn.secondary {
-            background:#fff; color: var(--main-color);
-            border:2px solid var(--main-color);
+            background-color: #fff;
+            color: #800000;
+            border: 2px solid #800000;
+            animation: none;
         }
-        .btn.secondary:hover { background:#faf4f1; }
+        .btn.secondary:hover {
+            background-color: #f5f5f5;
+        }
         .profile-icon {
             width:40px;height:40px;border-radius:50%;
             margin-left:15px;object-fit:cover;
@@ -137,7 +154,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <a href="Inscription.php" class="btn">Inscription</a>
             <a href="Connexion.php" class="btn">Connexion</a>
         <?php else: ?>
-            <a href="logout.php" class="btn">Déconnexion</a>
+            <a href="logout.php" class="btn secondary">Déconnexion</a>
         <?php endif; ?>
         <a href="Profil.php">
             <img src="Profile.avif" alt="Profil" class="profile-icon">
@@ -190,7 +207,8 @@ if (session_status() === PHP_SESSION_NONE) {
 </div>
 
 <footer>
-    © 2025 Gusteau’s Restaurant. Tous droits réservés.
+    &copy; 2025 Gusteau’s Restaurant — Tous droits réservés | Version 1.0<br>
+    🔐 Site sécurisé — ♿ Accessible à tous les profils
 </footer>
 
 <script>
