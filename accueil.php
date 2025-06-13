@@ -216,6 +216,7 @@ session_start();
         <div class="dropdown">
             <button class="dropbtn">Menu</button>
             <div class="dropdown-content">
+                <a href="Accueil.php">Accueil</a>
                 <a href="GestionCapteurs.php">Gestion de capteurs</a>
                 <a href="faq.php">FAQ</a>
                 <a href="cgu.php">CGU</a>
