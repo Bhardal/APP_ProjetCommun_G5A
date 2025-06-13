@@ -188,29 +188,49 @@ if (empty($_SESSION['user_id'])) {
 
     // Chart + fetch logic
     let logs = [], actionManuel = false, chart;
-    function fetchData() {
-        return fetch('./docs/getDataProx.php')
-            .then(r => r.ok ? r.json() : Promise.reject(r))
+
+    function fetchDataFromDatabase() {
+        return fetch('./docs/getDataGaz.php')
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
             .then(data => {
-                const last = data[data.length-1];
-                return last.intensite;
-            });
+                let last = data[data.length-1]
+                let id = last.id;
+                let value = last.intensite;
+                var dateString = last.date,
+                    dateTimeParts = dateString.split(" "),
+                    dateParts = dateTimeParts[0].split("-"),
+                    timeParts = dateTimeParts[1].split(":");
+                let date = new Date(dateParts[0], parseInt(dateParts[1], 10) - 1, dateParts[2], timeParts[0], timeParts[1], timeParts[2]);
+
+                const now = Math.floor(Date.now() / 1000);
+                return {
+                    ts: now,
+                    data: value
+                };
+            })
+
     }
+
     function simulerLectureCapteur(isManual) {
-        fetchData().then(val => {
-            document.getElementById('valeur').textContent = val + ' cm';
-            const seuil = +document.getElementById('seuil').value;
-            if (!isManual && document.getElementById('auto').checked && !actionManuel) {
-                document.getElementById('etat-action').textContent =
-                    '🔧 Action : ' + (val < seuil ? 'ON (auto)' : 'OFF (auto)');
-            }
-            const now = new Date().toLocaleTimeString();
-            logs.unshift(`${now} – ${val} cm`);
-            logs = logs.slice(0,5);
-            document.getElementById('historique').innerHTML =
-                logs.map(e=>`<li>${e}</li>`).join('');
-            updateGraph(now,val);
-        });
+        fetchDataFromDatabase()
+            .then(datas => {
+                const val = datas.data;
+                document.getElementById('valeur').textContent = val + ' cm';
+                const seuil = parseInt(document.getElementById('seuil').value,10);
+                if (!isManual && document.getElementById('auto').checked && !actionManuel) {
+                    document.getElementById('etat-action').textContent =
+                        '🛢️ Action : ' + (val < seuil ? 'ON (auto)' : 'OFF (auto)');
+                }
+                const now = new Date().toLocaleTimeString();
+                logs.unshift(`${now} – ${val} cm`);
+                logs = logs.slice(0,5);
+                document.getElementById('historique').innerHTML =
+                    logs.map(e=>`<li>${e}</li>`).join('');
+                updateGraph(now,val);
+            });
     }
     function toggleActionManuelle() {
         actionManuel = !actionManuel;
