@@ -14,9 +14,9 @@ $email  = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 1. Récupère et valide
-    $nom    = trim($_POST['nom'] ?? '');
-    $prenom = trim($_POST['prenom'] ?? '');
-    $email  = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
+    $nom    = htmlspecialchars(trim($_POST['nom'] ?? ''));
+    $prenom = htmlspecialchars(trim($_POST['prenom'] ?? ''));
+    $email  = htmlspecialchars(filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL));
     $p1     = $_POST['password'] ?? '';
     $p2     = $_POST['confirm-password'] ?? '';
 
@@ -35,25 +35,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 2. Vérifie si l’e-mail existe déjà
     if (empty($errors)) {
-        $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
-        $stmt->execute([$email]);
-        if ($stmt->fetch()) {
-            $errors[] = "Cette adresse e-mail est déjà prise.";
+        try {
+            $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            if ($stmt->fetch()) {
+                $errors[] = "Cette adresse e-mail est déjà prise.";
+            }
+        } catch(PDOException $e){
+            echo "Erreur de connexion à la base de donnée : " . $e->getMessage();
         }
     }
 
     // 3. Insère en BDD
     if (empty($errors)) {
-        $hash = password_hash($p1, PASSWORD_DEFAULT);
-        $stmt = $pdo->prepare(
-            "INSERT INTO users (nom, prenom, email, password)
-             VALUES (?, ?, ?, ?)"
-        );
-        $stmt->execute([$nom, $prenom, $email, $hash]);
+        try {
+            $hash = password_hash($p1, PASSWORD_DEFAULT);
+            $stmt = $pdo->prepare(
+                "INSERT INTO users (nom, prenom, email, password)
+                VALUES (?, ?, ?, ?)"
+            );
+            $stmt->execute([$nom, $prenom, $email, $hash]);
 
-        // redirige vers la page de connexion
-        header("Location: Connexion.php?registered=1");
-        exit;
+            // redirige vers la page de connexion
+            header("Location: Connexion.php?registered=1");
+            exit;
+        } catch(PDOException $e){
+            echo "Erreur de connexion à la base de donnée : " . $e->getMessage();
+        }
     }
 }
 ?>

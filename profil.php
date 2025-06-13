@@ -19,9 +19,9 @@ $success = false;
 
 // Traitement du formulaire de mise à jour
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nom    = trim($_POST['nom']    ?? '');
-    $prenom = trim($_POST['prenom'] ?? '');
-    $email  = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
+    $nom    = htmlspecialchars(trim($_POST['nom']    ?? ''));
+    $prenom = htmlspecialchars(trim($_POST['prenom'] ?? ''));
+    $email  = htmlspecialchars(filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL));
 
     if ($nom === '' || $prenom === '') {
         $errors[] = 'Nom et prénom obligatoires.';
@@ -51,9 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Rechargement des infos utilisateur
-$stmt = $pdo->prepare("SELECT nom, prenom, email, created_at FROM users WHERE id = ?");
-$stmt->execute([$userId]);
-$user = $stmt->fetch();
+try {
+    $stmt = $pdo->prepare("SELECT nom, prenom, email, created_at FROM users WHERE id = ?");
+    $stmt->execute([$userId]);
+    $user = $stmt->fetch();
+
+} catch(PDOException $e){
+    echo "Erreur de connexion à la base de donnée : " . $e->getMessage();
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">

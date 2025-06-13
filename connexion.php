@@ -15,16 +15,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$email) {
         $errors[] = "E-mail invalide.";
     } else {
-        $stmt = $pdo->prepare("SELECT id, password FROM users WHERE email = ?");
-        $stmt->execute([$email]);
-        $user = $stmt->fetch();
+        try {
+            $stmt = $pdo->prepare("SELECT id, password FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch();
 
-        if (!$user || !password_verify($pass, $user['password'])) {
-            $errors[] = "Identifiants incorrects.";
-        } else {
-            $_SESSION['user_id'] = $user['id'];
-            header("Location: Accueil.php");
-            exit;
+            if (!$user || !password_verify($pass, $user['password'])) {
+                $errors[] = "Identifiants incorrects.";
+            } else {
+                $_SESSION['user_id'] = $user['id'];
+                header("Location: Accueil.php");
+                exit;
+            }
+        } catch(PDOException $e){
+            echo "Erreur de connexion à la base de donnée : " . $e->getMessage();
         }
     }
 }

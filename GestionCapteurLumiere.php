@@ -1,14 +1,14 @@
 <?php
 // GestionCapteurLumiere.php
-// require 'config.php';
+require 'config.php';
 require_once './docs/dbConnexion.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// if (empty($_SESSION['user_id'])) {
-//     header('Location: Connexion.php');
-//     exit;
-// }
+if (empty($_SESSION['user_id'])) {
+    header('Location: Connexion.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">

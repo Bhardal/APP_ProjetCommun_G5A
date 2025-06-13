@@ -5,10 +5,10 @@ require_once './docs/dbConnexion.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// if (empty($_SESSION['user_id'])) {
-//     header('Location: Connexion.php');
-//     exit;
-// }
+if (empty($_SESSION['user_id'])) {
+    header('Location: Connexion.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -155,22 +155,52 @@ if (session_status() === PHP_SESSION_NONE) {
 <script>
     let logs = [], manuel = false, chart;
 
+    function fetchDataFromDatabase() {
+        return fetch('./docs/getDataTempHum.php')
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                let last = data[data.length-1]
+                let id = last.id;
+                let value = [last.temp, last.hum];
+                var dateString = last.date,
+                    dateTimeParts = dateString.split(" "),
+                    dateParts = dateTimeParts[0].split("-"),
+                    timeParts = dateTimeParts[1].split(":");
+                let date = new Date(dateParts[0], parseInt(dateParts[1], 10) - 1, dateParts[2], timeParts[0], timeParts[1], timeParts[2]);
+
+                const now = Math.floor(Date.now() / 1000);
+                return {
+                    ts: now,
+                    data: value
+                };
+            })
+
+    }
+
     function simulerLecture(isManual) {
-        const t = (15 + Math.random()*20).toFixed(1);
-        const h = (30 + Math.random()*60).toFixed(0);
-        document.getElementById('valeurT').textContent = t + ' °C';
-        document.getElementById('valeurH').textContent = h + ' %';
-        const seuilT = parseFloat(document.getElementById('seuilT').value);
-        const seuilH = parseFloat(document.getElementById('seuilH').value);
-        if (!isManual && document.getElementById('auto').checked && !manuel) {
-            document.querySelector('#etatT')?.remove();
-            document.querySelector('#etatH')?.remove();
-        }
-        const now = new Date().toLocaleTimeString();
-        logs.unshift(`${now} – T:${t}°C, H:${h}%`);
-        logs = logs.slice(0,5);
-        document.getElementById('historique').innerHTML = logs.map(e=>`<li>${e}</li>`).join('');
-        majGraph(now, t, h);
+        // const t = (15 + Math.random()*20).toFixed(1);
+        // const h = (30 + Math.random()*60).toFixed(0);
+        fetchDataFromDatabase()
+            .then(datas => {
+                const t = datas.data[0];
+                const h = datas.data[1];
+                document.getElementById('valeurT').textContent = t + ' °C';
+                document.getElementById('valeurH').textContent = h + ' %';
+                const seuilT = parseFloat(document.getElementById('seuilT').value);
+                const seuilH = parseFloat(document.getElementById('seuilH').value);
+                if (!isManual && document.getElementById('auto').checked && !manuel) {
+                    document.querySelector('#etatT')?.remove();
+                    document.querySelector('#etatH')?.remove();
+                }
+                const now = new Date().toLocaleTimeString();
+                logs.unshift(`${now} – T:${t}°C, H:${h}%`);
+                logs = logs.slice(0,5);
+                document.getElementById('historique').innerHTML = logs.map(e=>`<li>${e}</li>`).join('');
+                majGraph(now, t, h);
+            });
     }
 
     function toggleManuel() {
