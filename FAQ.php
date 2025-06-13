@@ -281,10 +281,10 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <div class="faq-item">
         <div class="faq-question">
-            <span>Comment signaler un bug ?</span>
+            <span>Puis-je recevoir une alerte (e-mail/SMS) si un capteur dépasse un seuil ?</span>
             <span class="faq-icon">▼</span>
         </div>
-        <div class="faq-answer">Envoyez un e-mail à l’équipe technique via contact@gusteaus-restaurant.com</div>
+        <div class="faq-answer">Oui activer les notifications dans la gestion de capteur. </div>
     </div>
 
     <div class="faq-item">
@@ -295,6 +295,14 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="faq-answer">
             Oui, car chaque action entraîne des requêtes vers la base de données, ce qui consomme de l’énergie. Même minime, cet impact existe, surtout si les utilisateurs ou capteurs effectuent de nombreuses requêtes en continu.
         </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span>Comment modifier les informations de mon profil ?</span>
+            <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-answer">Modifier vos informations directement via votre profil une fois connecté. </div>
     </div>
 
 
