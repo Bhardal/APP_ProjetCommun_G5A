@@ -1,7 +1,7 @@
 <?php
 // GestionCapteurLumiere.php
-require 'config.php';
-require_once './dbConnexion.php';
+// require 'config.php';
+require_once './docs/dbConnexion.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -190,6 +190,8 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <script>
     let logs = [], eclairageManuel = false, chart;
+    let seuilMaxLum = 1500;
+
 
     function fetchDataFromDatabase() {
         return fetch('./docs/getDataLum.php')
@@ -225,8 +227,18 @@ if (session_status() === PHP_SESSION_NONE) {
                 document.getElementById('valeur').textContent = val + ' lux';
                 const seuil = parseInt(document.getElementById('seuil').value, 10);
                 if (!isManual && document.getElementById('auto').checked && !eclairageManuel) {
-                    document.getElementById('etat-eclairage').textContent =
-                        '💡 Éclairage : ' + (val < seuil ? 'ON (auto)' : 'OFF (auto)');
+                    if (val < seuil) {
+                        document.getElementById('etat-eclairage').textContent =
+                            '💡 Éclairage : ON (auto)';
+                    } else if (val > seuil && val < seuilMaxLum) {
+                        document.getElementById('etat-eclairage').textContent =
+                            '💡 Éclairage : ON (auto)';
+                    } else {
+                        document.getElementById('etat-eclairage').textContent =
+                            '💡 Éclairage : OFF (auto)';
+                    }
+                    // document.getElementById('etat-eclairage').textContent =
+                    //     '💡 Éclairage : ' + (val < seuil ? 'ON (auto)' : 'OFF (auto)');
                 }
                 const now = new Date().toLocaleTimeString();
                 logs.unshift(`${now} – ${val} lux`);
