@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 
 try {
     $pdo = getConnection();
-    $stmt = $pdo->prepare("SELECT * FROM CapteurGaz ORDER BY ID DESC LIMIT 1");
+    $stmt = $pdo->prepare("SELECT * FROM CapteurGaz ORDER BY id DESC LIMIT 1");
     $stmt->execute();
 
     $allData = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -16,8 +16,8 @@ try {
     foreach ($allData as $row) {
         $data[] = [
             'id' => $row['id'],
-            'intensite' => $row['valeur'],
-            'date' => $row['temps']
+            'intensite' => $row['value'],
+            'date' => $row['timestamp']
         ];
     }
     echo json_encode($data);

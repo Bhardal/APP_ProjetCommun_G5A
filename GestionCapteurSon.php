@@ -168,7 +168,7 @@ if (empty($_SESSION['user_id'])) {
   <h2>Gestion du capteur de son</h2>
 
     <div class="valeur-son">
-        Niveau sonore actuel : <span id="valeur">---</span> dB
+        Niveau sonore actuel : <span id="valeur">---</span>
     </div>
 
     <div class="etat" id="etat-action">🔊 Action : —</div>

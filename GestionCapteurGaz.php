@@ -169,7 +169,7 @@ if (empty($_SESSION['user_id'])) {
     <h2>Gestion du capteur de gaz</h2>
 
     <div class="valeur-gaz">
-        Concentration actuelle : <span id="valeur">---</span> ppm
+        Concentration actuelle : <span id="valeur">---</span>
     </div>
     <div class="etat" id="etat-action">🛢️ Action : —</div>
 
@@ -238,7 +238,8 @@ if (empty($_SESSION['user_id'])) {
         fetchDataFromDatabase()
             .then(datas => {
                 const val = datas.data;
-                document.getElementById('valeur').textContent = val + ' ppm';
+                console.log('Lecture du capteur de gaz :', val);
+                document.getElementById('valeur').textContent = val + " ppm";
                 const seuil = parseInt(document.getElementById('seuil').value,10);
                 if (!isManual && document.getElementById('auto').checked && !actionManuel) {
                     document.getElementById('etat-action').textContent =

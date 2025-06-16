@@ -149,7 +149,7 @@ if (empty($_SESSION['user_id'])) {
     <h2>Gestion du capteur de distance</h2>
 
     <div class="valeur-dist">
-        Distance actuelle : <span id="valeur">---</span> cm
+        Distance actuelle : <span id="valeur">---</span>
     </div>
 
     <div class="etat" id="etat-action">🔧 Action : —</div>
@@ -191,7 +191,7 @@ if (empty($_SESSION['user_id'])) {
     let logs = [], actionManuel = false, chart;
 
     function fetchDataFromDatabase() {
-        return fetch('./docs/getDataGaz.php')
+        return fetch('./docs/getDataProx.php')
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok');
                 return response.json();
