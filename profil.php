@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom    = htmlspecialchars(trim($_POST['nom']    ?? ''));
     $prenom = htmlspecialchars(trim($_POST['prenom'] ?? ''));
     $email  = htmlspecialchars(filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL));
+    $telephone = htmlspecialchars(trim($_POST['telephone'] ?? ''));
 
     if ($nom === '' || $prenom === '') {
         $errors[] = 'Nom et prénom obligatoires.';
@@ -33,16 +34,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         try {
             $stmt = $pdo->prepare("
-                UPDATE users
-                SET nom = :nom, prenom = :prenom, email = :email
-                WHERE id = :id
-            ");
+    UPDATE users
+    SET nom = :nom, prenom = :prenom, email = :email, telephone = :telephone
+    WHERE id = :id
+");
             $stmt->execute([
-                ':nom'    => $nom,
-                ':prenom' => $prenom,
-                ':email'  => $email,
-                ':id'     => $userId,
+                ':nom'       => $nom,
+                ':prenom'    => $prenom,
+                ':email'     => $email,
+                ':telephone' => $telephone,
+                ':id'        => $userId,
             ]);
+
             $success = true;
         } catch (PDOException $e) {
             $errors[] = "Erreur lors de la mise à jour : " . $e->getMessage();
@@ -52,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Rechargement des infos utilisateur
 try {
-    $stmt = $pdo->prepare("SELECT nom, prenom, email, created_at FROM users WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT nom, prenom, email, telephone, created_at FROM users WHERE id = ?");
     $stmt->execute([$userId]);
     $user = $stmt->fetch();
 
@@ -253,6 +256,10 @@ try {
                 <label for="email">E-mail</label>
                 <input type="email" id="email" name="email"
                        value="<?= htmlspecialchars($user['email']) ?>" required>
+
+                <label for="telephone">Numéro de téléphone</label>
+                <input type="tel" id="telephone" name="telephone" pattern="[0-9]{10}" required
+                       value="<?= htmlspecialchars($user['telephone'] ?? '') ?>">
 
                 <label>Inscrit le</label>
                 <input type="text" value="<?= htmlspecialchars($user['created_at']) ?>" disabled>

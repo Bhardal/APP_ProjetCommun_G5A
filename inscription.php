@@ -11,12 +11,15 @@ $errors = [];
 $nom    = '';
 $prenom = '';
 $email  = '';
+$telephone = '';
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 1. Récupère et valide
     $nom    = htmlspecialchars(trim($_POST['nom'] ?? ''));
     $prenom = htmlspecialchars(trim($_POST['prenom'] ?? ''));
     $email  = htmlspecialchars(filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL));
+    $telephone = htmlspecialchars(trim($_POST['telephone'] ?? ''));
     $p1     = $_POST['password'] ?? '';
     $p2     = $_POST['confirm-password'] ?? '';
 
@@ -51,10 +54,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $hash = password_hash($p1, PASSWORD_DEFAULT);
             $stmt = $pdo->prepare(
-                "INSERT INTO users (nom, prenom, email, password)
-                VALUES (?, ?, ?, ?)"
+                "INSERT INTO users (nom, prenom, email, telephone, password)
+    VALUES (?, ?, ?, ?, ?)"
             );
-            $stmt->execute([$nom, $prenom, $email, $hash]);
+            $stmt->execute([$nom, $prenom, $email, $telephone, $hash]);
+
 
             // redirige vers la page de connexion
             header("Location: Connexion.php?registered=1");
@@ -142,6 +146,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="email">Adresse e-mail</label>
         <input type="email" id="email" name="email" required
                value="<?= htmlspecialchars($email) ?>">
+
+        <label for="telephone">Numéro de téléphone</label>
+        <input type="tel" id="telephone" name="telephone" pattern="[0-9]{10}" required
+               value="<?= htmlspecialchars($_POST['telephone'] ?? '') ?>">
 
         <label for="password">Mot de passe</label>
         <input type="password" id="password" name="password" required>
