@@ -29,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $token   = bin2hex(random_bytes(16));
             $expires = date('Y-m-d H:i:s', time() + 3600);
             $stmt = $pdo->prepare("
-              UPDATE users 
-              SET reset_token = ?, reset_expires = ? 
+              UPDATE users
+              SET reset_token = ?, reset_expires = ?
               WHERE id = ?
             ");
             $stmt->execute([$token, $expires, $user['id']]);
@@ -79,7 +79,7 @@ CSS;
   <div class="container">
     <h1>Reinitialisation de votre mot de passe</h1>
     <p>Bonjour,</p>
-    <p>Vous avez demandé à reinitialiser votre mot de passe pour <strong>Gusteau’s Restaurant</strong>.  
+    <p>Vous avez demandé à reinitialiser votre mot de passe pour <strong>Gusteau’s Restaurant</strong>.
     Cliquez sur le bouton ci-dessous pour en choisir un nouveau (valide 1 heure) :</p>
     <p style="text-align:center;">
       <a href="$resetLink" class="button">Reinitialiser mon mot de passe</a>
@@ -147,6 +147,44 @@ HTML;
         .back-link:hover { text-decoration:underline; }
     </style>
 </head>
+
+<header>
+    <?php if (!empty($_SESSION['user_id'])): ?>
+        <!-- Menu déroulant (visible uniquement quand connecté) -->
+        <div class="dropdown">
+            <button class="dropbtn">Menu</button>
+            <div class="dropdown-content">
+                <a href="accueil.php">Accueil</a>
+                <a href="gestionCapteurs.php">Gestion de capteurs</a>
+                <a href="faq.php">FAQ</a>
+                <a href="cgu.php">CGU</a>
+            </div>
+        </div>
+    <?php endif; ?>
+
+
+    <!-- Logo central -->
+    <a href="accueil.php" class="logo-area">
+        <img src="GUSTEAU'S.jpg" alt="Logo Gusteau">
+        <div class="logo-text">GUSTEAU'S RESTAURANT</div>
+    </a>
+
+
+    <div class="buttons">
+        <?php if (empty($_SESSION['user_id'])): ?>
+            <a href="inscription.php" class="btn">Inscription</a>
+            <a href="connexion.php"   class="btn">Connexion</a>
+        <?php else: ?>
+            <a href="logout.php"      class="btn secondary">Déconnexion</a>
+        <?php endif; ?>
+
+        <a href="profil.php">
+            <img src="Profile.avif" alt="Profil" class="profile-icon">
+        </a>
+    </div>
+
+</header>
+
 <body>
 <div class="form-container">
     <h2>Mot de passe oublié</h2>

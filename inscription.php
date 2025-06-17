@@ -122,6 +122,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </style>
 </head>
+
+<header>
+    <?php if (!empty($_SESSION['user_id'])): ?>
+        <!-- Menu déroulant (visible uniquement quand connecté) -->
+        <div class="dropdown">
+            <button class="dropbtn">Menu</button>
+            <div class="dropdown-content">
+                <a href="accueil.php">Accueil</a>
+                <a href="gestionCapteurs.php">Gestion de capteurs</a>
+                <a href="faq.php">FAQ</a>
+                <a href="cgu.php">CGU</a>
+            </div>
+        </div>
+    <?php endif; ?>
+
+
+    <!-- Logo central -->
+    <a href="accueil.php" class="logo-area">
+        <img src="GUSTEAU'S.jpg" alt="Logo Gusteau">
+        <div class="logo-text">GUSTEAU'S RESTAURANT</div>
+    </a>
+
+
+    <div class="buttons">
+        <?php if (empty($_SESSION['user_id'])): ?>
+            <a href="inscription.php" class="btn">Inscription</a>
+            <a href="connexion.php"   class="btn">Connexion</a>
+        <?php else: ?>
+            <a href="logout.php"      class="btn secondary">Déconnexion</a>
+        <?php endif; ?>
+
+        <a href="profil.php">
+            <img src="Profile.avif" alt="Profil" class="profile-icon">
+        </a>
+    </div>
+
+</header>
+
 <body>
 <div class="form-container">
     <h2>Créer un compte</h2>
