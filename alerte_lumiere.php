@@ -45,10 +45,10 @@ try {
 
     if ($type === 'on') {
         $mail->Subject = ' Alerte : Luminosite trop basse';
-        $mail->Body    = "Bonjour {$user['prenom']},\n\n⚠️ La luminosité est inférieure à 350 lux.\nLa lumière a été automatiquement allumée.\n\n– Gusteau's";
+        $mail->Body    = "Bonjour {$user['prenom']},\n\n⚠ La luminosité est inférieure à 350 lux.\nLa lumière a été automatiquement allumée.\n\n– Gusteau's";
     } elseif ($type === 'off') {
         $mail->Subject = ' Alerte : Luminosite trop elevee';
-        $mail->Body    = "Bonjour {$user['prenom']},\n\n⚠️ La luminosité est supérieure à 1500 lux.\nLa lumière a été automatiquement éteinte.\n\n– Gusteau's";
+        $mail->Body    = "Bonjour {$user['prenom']},\n\n⚠ La luminosité est supérieure à 1500 lux.\nLa lumière a été automatiquement éteinte.\n\n– Gusteau's";
     } else {
         echo "Type de seuil invalide ou manquant.";
         exit;

@@ -25,7 +25,14 @@ if (empty($_SESSION['user_id'])) {
             background: url("Resto.png") center/cover no-repeat;
             color: #800000;
         }
-
+        header {
+            background-color: white;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+            position: relative;
+        }
         /* Dropdown */
         .dropdown {
             position: relative;
@@ -56,7 +63,7 @@ if (empty($_SESSION['user_id'])) {
             z-index: 100;
         }
         .dropdown-content.show {
-            display: block !important;
+            display: block;
         }
         .dropdown-content a {
             display: block;
@@ -68,46 +75,71 @@ if (empty($_SESSION['user_id'])) {
         .dropdown-content a:hover {
             background-color: #f5f5f5;
         }
-
-        header {
-            background: rgba(255,255,255,0.9);
-            padding:20px 40px;
-            display:flex;
-            align-items:center;
-            border-bottom:1px solid #ccc;
-            position:sticky; top:0; z-index:10;
+        /* Logo */
+        .logo-area {
+            display: flex;
+            align-items: center;
+        }
+        .logo-area img {
+            width: 50px;
+            height: auto;
+            margin-right: 15px;
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #800000;
         }
         a.logo-area {
-            display:flex; align-items:center;
-            text-decoration:none; color:inherit; user-select:none;
+            text-decoration: none;
+            color: inherit;
+            user-select: none;
         }
-        a.logo-area img { width:50px; margin-right:15px; }
-        .logo-text { font-size:24px; font-weight:bold; }
+        a.logo-area:focus {
+            outline: none;
+        }
+        /* Boutons de droite */
         .buttons {
-            margin-left:auto;
-            display:flex; align-items:center;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
         }
         .btn {
-            background:#800000; color:#fff; padding:10px 18px;
-            border:none; border-radius:20px; margin-left:15px;
-            text-decoration:none; transition:all .3s; animation:pulse 2.5s infinite;
-            font-size:15px;
+            background-color: #800000;
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 20px;
+            margin-left: 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            animation: pulse 2.5s infinite;
+            font-size: 15px;
         }
-        .btn:hover { background:#a00d0d; transform:scale(1.05); }
+        .btn:hover {
+            background-color: #a00d0d;
+            transform: scale(1.05);
+        }
         .btn.secondary {
-            background:#fff; color:#800000; border:2px solid #800000; animation:none;
+            background-color: #fff;
+            color: #800000;
+            border: 2px solid #800000;
+            animation: none;
         }
-        .btn.secondary:hover { background:#f5f5f5; }
+        .btn.secondary:hover {
+            background-color: #f5f5f5;
+        }
         @keyframes pulse {
             0%,100% { box-shadow:0 0 0 0 rgba(128,0,0,0.4); }
             50%     { box-shadow:0 0 0 10px rgba(128,0,0,0); }
         }
         .profile-icon {
-            width:40px; height:40px; border-radius:50%;
-            margin-left:15px; object-fit:cover;
-            border:2px solid #800000; cursor:pointer;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            margin-left: 15px;
+            object-fit: cover;
+            border: 2px solid #800000;
+            cursor: pointer;
         }
-
         main {
             flex: 1;
             padding:60px 20px;
@@ -149,28 +181,40 @@ if (empty($_SESSION['user_id'])) {
 <body>
 
 <header>
-    <!-- Menu déroulant -->
-    <div class="dropdown">
-        <button class="dropbtn">Menu</button>
-        <div class="dropdown-content">
-            <a href="Accueil.php">Accueil</a>
-            <a href="GestionCapteurs.php">Gestion de capteurs</a>
-            <a href="faq.php">FAQ</a>
-            <a href="cgu.php">CGU</a>
+    <?php if (!empty($_SESSION['user_id'])): ?>
+        <!-- Menu déroulant (visible uniquement quand connecté) -->
+        <div class="dropdown">
+            <button class="dropbtn">Menu</button>
+            <div class="dropdown-content">
+                <a href="accueil.php">Accueil</a>
+                <a href="gestionCapteurs.php">Gestion de capteurs</a>
+                <a href="faq.php">FAQ</a>
+                <a href="cgu.php">CGU</a>
+            </div>
         </div>
-    </div>
+    <?php endif; ?>
 
-    <a href="Accueil.php" class="logo-area">
+
+    <!-- Logo central -->
+    <a href="accueil.php" class="logo-area">
         <img src="GUSTEAU'S.jpg" alt="Logo Gusteau">
         <div class="logo-text">GUSTEAU'S RESTAURANT</div>
     </a>
 
+
     <div class="buttons">
-        <a href="logout.php" class="btn secondary">Déconnexion</a>
-        <a href="Profil.php">
+        <?php if (empty($_SESSION['user_id'])): ?>
+            <a href="inscription.php" class="btn">Inscription</a>
+            <a href="connexion.php"   class="btn">Connexion</a>
+        <?php else: ?>
+            <a href="logout.php"      class="btn secondary">Déconnexion</a>
+        <?php endif; ?>
+
+        <a href="profil.php">
             <img src="Profile.avif" alt="Profil" class="profile-icon">
         </a>
     </div>
+
 </header>
 
 <main>
@@ -179,29 +223,29 @@ if (empty($_SESSION['user_id'])) {
         <div class="sensor-cards">
             <!-- Capteurs… -->
             <div class="sensor-card">
-                <h3><a href="GestionCapteurLumiere.php" class="sensor-link">💡 Capteur de lumière</a></h3>
+                <h3><a href="gestionCapteurLumiere.php" class="sensor-link">💡 Capteur de lumière</a></h3>
                 <p>Valeur actuelle : -- lux</p>
-                <a href="GestionCapteurLumiere.php" class="btn secondary">Gérer ce capteur</a>
+                <a href="gestionCapteurLumiere.php" class="btn secondary">Gérer ce capteur</a>
             </div>
             <div class="sensor-card">
-                <h3><a href="GestionCapteurDistance.php" class="sensor-link">📏 Capteur de distance</a></h3>
+                <h3><a href="gestionCapteurDistance.php" class="sensor-link">📏 Capteur de distance</a></h3>
                 <p>Valeur actuelle : -- cm</p>
-                <a href="GestionCapteurDistance.php" class="btn secondary">Gérer ce capteur</a>
+                <a href="gestionCapteurDistance.php" class="btn secondary">Gérer ce capteur</a>
             </div>
             <div class="sensor-card">
-                <h3><a href="GestionCapteurSon.php" class="sensor-link">🔊 Capteur de son</a></h3>
+                <h3><a href="gestionCapteurSon.php" class="sensor-link">🔊 Capteur de son</a></h3>
                 <p>Valeur actuelle : -- dB</p>
-                <a href="GestionCapteurSon.php" class="btn secondary">Gérer ce capteur</a>
+                <a href="gestionCapteurSon.php" class="btn secondary">Gérer ce capteur</a>
             </div>
             <div class="sensor-card">
-                <h3><a href="GestionCapteurGaz.php" class="sensor-link">🛢️ Capteur de gaz</a></h3>
+                <h3><a href="gestionCapteurGaz.php" class="sensor-link">🛢️ Capteur de gaz</a></h3>
                 <p>Valeur actuelle : -- ppm</p>
-                <a href="GestionCapteurGaz.php" class="btn secondary">Gérer ce capteur</a>
+                <a href="gestionCapteurGaz.php" class="btn secondary">Gérer ce capteur</a>
             </div>
             <div class="sensor-card">
-                <h3><a href="GestionCapteurTempHum.php" class="sensor-link">🌡️ Capteur Température & Humidité</a></h3>
+                <h3><a href="gestionCapteurTempHum.php" class="sensor-link">🌡️ Capteur Température & Humidité</a></h3>
                 <p>Temp : -- °C<br>Humidité : -- %</p>
-                <a href="GestionCapteurTempHum.php" class="btn secondary">Gérer ce capteur</a>
+                <a href="gestionCapteurTempHum.php" class="btn secondary">Gérer ce capteur</a>
             </div>
         </div>
     </div>

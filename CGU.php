@@ -25,38 +25,79 @@ if (session_status() === PHP_SESSION_NONE) {
             min-height: 100vh;
             color: var(--text-color);
         }
-        /* Header */
         header {
-            background: rgba(255,255,255,0.9);
+            background-color: white;
             padding: 20px 40px;
-            display: flex; align-items: center;
+            display: flex;
+            align-items: center;
             border-bottom: 1px solid #ccc;
-            position: sticky; top:0; z-index:10;
+            position: relative;
         }
-        .dropdown { position: relative; margin-right:20px; }
+        /* Dropdown */
+        .dropdown {
+            position: relative;
+            margin-right: 20px;
+        }
         .dropbtn {
-            background: var(--main-color); color:#fff;
-            padding:10px 18px; border:none; border-radius:4px;
-            cursor:pointer;
+            background-color: #800000;
+            color: #fff;
+            padding: 10px 18px;
+            font-size: 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .dropbtn:hover {
+            background-color: #a00d0d;
         }
         .dropdown-content {
             display: none;
-            position: absolute; top:110%; left:0;
-            background:#fff; min-width:180px;
-            border:1px solid #ccc; box-shadow:0 4px 8px rgba(0,0,0,0.1);
-            z-index:100;
+            position: absolute;
+            top: 110%;
+            left: 0;
+            background-color: #fff;
+            min-width: 180px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 100;
         }
-        .dropdown-content.show { display:block; }
+        .dropdown-content.show {
+            display: block;
+        }
         .dropdown-content a {
-            display:block; padding:10px 15px;
-            color: var(--main-color); text-decoration:none;
+            display: block;
+            padding: 10px 15px;
+            color: #800000;
+            text-decoration: none;
+            font-size: 14px;
         }
-        .dropdown-content a:hover { background:#faf4f1; }
+        .dropdown-content a:hover {
+            background-color: #f5f5f5;
+        }
+        /* Logo */
         .logo-area {
-            display:flex; align-items:center; text-decoration:none; color:inherit;
+            display: flex;
+            align-items: center;
         }
-        .logo-area img { width:50px; margin-right:15px; }
-        .logo-text { font-size:24px; font-weight:bold; }
+        .logo-area img {
+            width: 50px;
+            height: auto;
+            margin-right: 15px;
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #800000;
+        }
+        a.logo-area {
+            text-decoration: none;
+            color: inherit;
+            user-select: none;
+        }
+        a.logo-area:focus {
+            outline: none;
+        }
         /* Boutons de droite */
         .buttons {
             margin-left: auto;
@@ -87,10 +128,17 @@ if (session_status() === PHP_SESSION_NONE) {
         .btn.secondary:hover {
             background-color: #f5f5f5;
         }
+        @keyframes pulse {
+            0%,100% { box-shadow:0 0 0 0 rgba(128,0,0,0.4); }
+            50%     { box-shadow:0 0 0 10px rgba(128,0,0,0); }
+        }
         .profile-icon {
-            width:40px;height:40px;border-radius:50%;
-            margin-left:15px;object-fit:cover;
-            border:2px solid var(--main-color);cursor:pointer;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            margin-left: 15px;
+            object-fit: cover;
+            border: 2px solid #800000;
+            cursor: pointer;
         }
 
         /* Container CGU */
@@ -140,24 +188,24 @@ if (session_status() === PHP_SESSION_NONE) {
     <div class="dropdown">
         <button class="dropbtn">Menu</button>
         <div class="dropdown-content">
-            <a href="Accueil.php">Accueil</a>
-            <a href="GestionCapteurs.php">Gestion de capteurs</a>
+            <a href="accueil.php">Accueil</a>
+            <a href="gestionCapteurs.php">Gestion de capteurs</a>
             <a href="faq.php">FAQ</a>
             <a href="cgu.php">CGU</a>
         </div>
     </div>
-    <a href="Accueil.php" class="logo-area">
+    <a href="accueil.php" class="logo-area">
         <img src="GUSTEAU'S.jpg" alt="Logo Gusteau">
         <div class="logo-text">GUSTEAU'S RESTAURANT</div>
     </a>
     <div class="buttons">
         <?php if (empty($_SESSION['user_id'])): ?>
-            <a href="Inscription.php" class="btn">Inscription</a>
-            <a href="Connexion.php" class="btn">Connexion</a>
+            <a href="inscription.php" class="btn">Inscription</a>
+            <a href="connexion.php" class="btn">Connexion</a>
         <?php else: ?>
             <a href="logout.php" class="btn secondary">Déconnexion</a>
         <?php endif; ?>
-        <a href="Profil.php">
+        <a href="profil.php">
             <img src="Profile.avif" alt="Profil" class="profile-icon">
         </a>
     </div>

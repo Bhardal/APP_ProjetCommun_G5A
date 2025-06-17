@@ -70,15 +70,23 @@ try {
     <title>Mon Profil – Gusteau’s Restaurant</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:'Georgia',serif;}
-        body{background-color:white;color:#800000;}
-        header{
-            background:white;
-            padding:20px 40px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            border-bottom:1px solid #ccc;
+        * {
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Georgia',serif;
+        }
+        body{
+            background-color: white;
+            color: #800000;
+        }
+        header {
+            background-color: white;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+            position: relative;
         }
         /* Dropdown */
         .dropdown {
@@ -122,51 +130,86 @@ try {
         .dropdown-content a:hover {
             background-color: #f5f5f5;
         }
-        a.logo-area{
-            display:flex;
-            align-items:center;
-            text-decoration:none;
-            color:inherit;
-            user-select:none;
+        /* Logo */
+        .logo-area {
+            display: flex;
+            align-items: center;
         }
-        a.logo-area img{width:50px;height:auto;margin-right:15px;}
-        .logo-text{font-size:24px;font-weight:bold;color:#800000;}
-        .buttons{display:flex;align-items:center;}
-        .btn{
-            background:#800000;color:#fff;
-            padding:10px 18px;border-radius:20px;
-            margin-left:15px;text-decoration:none;
-            transition:all .3s;animation:pulse 2.5s infinite;
-            font-size:15px;
+        .logo-area img {
+            width: 50px;
+            height: auto;
+            margin-right: 15px;
         }
-        .btn:hover{background:#a00d0d;transform:scale(1.05);}
-        .btn.secondary{background:#fff;color:#800000;border:2px solid #800000;animation:none;}
-        .btn.secondary:hover{background:#f5f5f5;}
-        @keyframes pulse{
-            0%,100%{box-shadow:0 0 0 0 rgba(128,0,0,0.4);}
-            50%{box-shadow:0 0 0 10px rgba(128,0,0,0);}
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #800000;
         }
-        .profile-icon{
-            width:40px;height:40px;border-radius:50%;
-            margin-left:15px;object-fit:cover;
-            border:2px solid #800000;cursor:pointer;
+        a.logo-area {
+            text-decoration: none;
+            color: inherit;
+            user-select: none;
+        }
+        a.logo-area:focus {
+            outline: none;
+        }
+        /* Boutons de droite */
+        .buttons {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+        .btn {
+            background-color: #800000;
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 20px;
+            margin-left: 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            animation: pulse 2.5s infinite;
+            font-size: 15px;
+        }
+        .btn:hover {
+            background-color: #a00d0d;
+            transform: scale(1.05);
+        }
+        .btn.secondary {
+            background-color: #fff;
+            color: #800000;
+            border: 2px solid #800000;
+            animation: none;
+        }
+        .btn.secondary:hover {
+            background-color: #f5f5f5;
+        }
+        @keyframes pulse {
+            0%,100% { box-shadow:0 0 0 0 rgba(128,0,0,0.4); }
+            50%     { box-shadow:0 0 0 10px rgba(128,0,0,0); }
+        }
+        .profile-icon {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            margin-left: 15px;
+            object-fit: cover;
+            border: 2px solid #800000;
+            cursor: pointer;
         }
         main{
             width:100%;min-height:100vh;
             background:url("Resto.png") center/cover no-repeat;
-            display:flex;align-items:center;justify-content:center;
             position:relative;
         }
         .overlay{
             width:100%;height:100%;
             background:rgba(255,255,255,0.05);
-            display:flex;align-items:center;justify-content:center;
+            padding-top:5%
         }
         .content{
-            position:absolute;top:50%;left:50%;
-            transform:translate(-50%,-50%);
+            margin: auto;
+            padding:40px;
             background:rgba(255,255,255,0.9);
-            padding:40px;border-radius:15px;
+            border-radius:15px;
             max-width:500px;width:90%;
             box-shadow:0 0 15px rgba(0,0,0,0.1);
             text-align:center;
@@ -186,10 +229,6 @@ try {
         }
         .content button:hover { background: #a00d0d; }
         .errors { text-align:left; color:#a00; margin-bottom:20px; }
-        footer{background:#2C3E50;color:#fff;padding:20px;text-align:center;font-size:14px;}
-        @media (max-width:600px) {
-            .content { padding:20px; }
-        }
         footer {
             background-color:#2C3E50; color:#fff;
             padding:20px; text-align:center; font-size:14px;
@@ -208,23 +247,35 @@ try {
         <div class="dropdown">
             <button class="dropbtn">Menu</button>
             <div class="dropdown-content">
-                <a href="Accueil.php">Accueil</a>
-                <a href="GestionCapteurs.php">Gestion de capteurs</a>
+                <a href="accueil.php">Accueil</a>
+                <a href="gestionCapteurs.php">Gestion de capteurs</a>
                 <a href="faq.php">FAQ</a>
                 <a href="cgu.php">CGU</a>
             </div>
         </div>
     <?php endif; ?>
-    <a href="Accueil.php" class="logo-area">
+
+
+    <!-- Logo central -->
+    <a href="accueil.php" class="logo-area">
         <img src="GUSTEAU'S.jpg" alt="Logo Gusteau">
         <div class="logo-text">GUSTEAU'S RESTAURANT</div>
     </a>
+
+
     <div class="buttons">
-        <a href="logout.php" class="btn secondary">Se déconnecter</a>
-        <a href="Profil.php">
+        <?php if (empty($_SESSION['user_id'])): ?>
+            <a href="inscription.php" class="btn">Inscription</a>
+            <a href="connexion.php"   class="btn">Connexion</a>
+        <?php else: ?>
+            <a href="logout.php"      class="btn secondary">Déconnexion</a>
+        <?php endif; ?>
+
+        <a href="profil.php">
             <img src="Profile.avif" alt="Profil" class="profile-icon">
         </a>
     </div>
+
 </header>
 
 <main>
