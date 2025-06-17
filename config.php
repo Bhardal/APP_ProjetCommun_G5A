@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-$host   = 'localhost';
-$dbname = 'gusteaurestaurant';
-$user   = 'root';    // adapte
-$pass   = '';        // adapte
+$host   = 'mysql-bhardal.alwaysdata.net';
+$dbname = 'bhardal_gustog5';
+$user   = 'bhardal';    // adapte
+$pass   = 'AZ3Q%h2VtyMXupM';        // adapte
 $charset= 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
