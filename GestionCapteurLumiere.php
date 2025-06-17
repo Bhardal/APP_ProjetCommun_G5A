@@ -163,6 +163,7 @@ if (empty($_SESSION['user_id'])) {
     <div class="valeur-lum">
         Luminosité actuelle : <span id="valeur">---</span>
     </div>
+    <div id="alerte-message" style="color: red; font-weight: bold; margin-top: 10px;"></div>
 
     <div class="etat" id="etat-eclairage">💡 Éclairage : —</div>
 
@@ -239,11 +240,19 @@ if (empty($_SESSION['user_id'])) {
                     if (val < seuil) {
                         document.getElementById('etat-eclairage').textContent =
                             '💡 Éclairage : ON (auto)';
+                        fetch('alerte_lumiere.php?type=on')
+                            .then(response => response.text())
+                            .then(msg => console.log('📧 Mail ON envoyé :', msg))
+                            .catch(err => console.error('❌ Erreur mail ON :', err));
                     } else if (val > seuil && val < seuilMaxLum) {
                         ;
                     } else {
                         document.getElementById('etat-eclairage').textContent =
                             '💡 Éclairage : OFF (auto)';
+                        fetch('alerte_lumiere.php?type=off')
+                            .then(response => response.text())
+                            .then(msg => console.log('📧 Mail OFF envoyé :', msg))
+                            .catch(err => console.error('❌ Erreur mail OFF :', err));
                     }
                     // document.getElementById('etat-eclairage').textContent =
                     //     '💡 Éclairage : ' + (val < seuil ? 'ON (auto)' : 'OFF (auto)');
