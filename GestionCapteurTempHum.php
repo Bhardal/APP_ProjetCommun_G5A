@@ -131,33 +131,40 @@ if (empty($_SESSION['user_id'])) {
 <body>
 
 <header>
-    <!-- Menu déroulant -->
-    <div class="dropdown">
-        <button class="dropbtn">Menu</button>
-        <div class="dropdown-content">
-            <a href="Accueil.php">Accueil</a>
-            <a href="GestionCapteurs.php">Gestion de capteurs</a>
-            <a href="faq.php">FAQ</a>
-            <a href="cgu.php">CGU</a>
+    <?php if (!empty($_SESSION['user_id'])): ?>
+        <!-- Menu déroulant (visible uniquement quand connecté) -->
+        <div class="dropdown">
+            <button class="dropbtn">Menu</button>
+            <div class="dropdown-content">
+                <a href="accueil.php">Accueil</a>
+                <a href="gestionCapteurs.php">Gestion de capteurs</a>
+                <a href="faq.php">FAQ</a>
+                <a href="cgu.php">CGU</a>
+            </div>
         </div>
-    </div>
+    <?php endif; ?>
 
-    <a href="Accueil.php" class="logo-area">
+
+    <!-- Logo central -->
+    <a href="accueil.php" class="logo-area">
         <img src="GUSTEAU'S.jpg" alt="Logo Gusteau">
         <div class="logo-text">GUSTEAU'S RESTAURANT</div>
     </a>
 
+
     <div class="buttons">
-        <?php if(empty($_SESSION['user_id'])): ?>
-            <a href="Inscription.php" class="btn">Inscription</a>
-            <a href="Connexion.php"   class="btn">Connexion</a>
+        <?php if (empty($_SESSION['user_id'])): ?>
+            <a href="inscription.php" class="btn">Inscription</a>
+            <a href="connexion.php"   class="btn">Connexion</a>
         <?php else: ?>
             <a href="logout.php"      class="btn secondary">Déconnexion</a>
         <?php endif; ?>
-        <a href="Profil.php">
+
+        <a href="profil.php">
             <img src="Profile.avif" alt="Profil" class="profile-icon">
         </a>
     </div>
+
 </header>
 
 <div class="capteur-container">
@@ -187,7 +194,7 @@ if (empty($_SESSION['user_id'])) {
     <h3 style="margin-top:25px;">Historique</h3>
     <ul id="historique"></ul>
 
-    <a href="GestionCapteurs.php" class="back">← Retour à la gestion des capteurs</a>
+    <a href="gestionCapteurs.php" class="back">← Retour à la gestion des capteurs</a>
 </div>
 
 <script>

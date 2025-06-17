@@ -208,23 +208,35 @@ try {
         <div class="dropdown">
             <button class="dropbtn">Menu</button>
             <div class="dropdown-content">
-                <a href="Accueil.php">Accueil</a>
-                <a href="GestionCapteurs.php">Gestion de capteurs</a>
+                <a href="accueil.php">Accueil</a>
+                <a href="gestionCapteurs.php">Gestion de capteurs</a>
                 <a href="faq.php">FAQ</a>
                 <a href="cgu.php">CGU</a>
             </div>
         </div>
     <?php endif; ?>
-    <a href="Accueil.php" class="logo-area">
+
+
+    <!-- Logo central -->
+    <a href="accueil.php" class="logo-area">
         <img src="GUSTEAU'S.jpg" alt="Logo Gusteau">
         <div class="logo-text">GUSTEAU'S RESTAURANT</div>
     </a>
+
+
     <div class="buttons">
-        <a href="logout.php" class="btn secondary">Se déconnecter</a>
-        <a href="Profil.php">
+        <?php if (empty($_SESSION['user_id'])): ?>
+            <a href="inscription.php" class="btn">Inscription</a>
+            <a href="connexion.php"   class="btn">Connexion</a>
+        <?php else: ?>
+            <a href="logout.php"      class="btn secondary">Déconnexion</a>
+        <?php endif; ?>
+
+        <a href="profil.php">
             <img src="Profile.avif" alt="Profil" class="profile-icon">
         </a>
     </div>
+
 </header>
 
 <main>

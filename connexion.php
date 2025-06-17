@@ -110,8 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 
     <a href="mot-de-passe-oublie.php" class="forgot-link">Mot de passe oublié ?</a>
-    <a href="Inscription.php" class="register-link">Pas encore de compte ? Créer un compte</a>
-    <a href="Accueil.php" class="back-link">← Retour à l'accueil</a>
+    <a href="inscription.php" class="register-link">Pas encore de compte ? Créer un compte</a>
+    <a href="accueil.php" class="back-link">← Retour à l'accueil</a>
 </div>
 </body>
 </html>

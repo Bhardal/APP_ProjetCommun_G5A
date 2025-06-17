@@ -149,28 +149,40 @@ if (empty($_SESSION['user_id'])) {
 <body>
 
 <header>
-    <!-- Menu déroulant -->
-    <div class="dropdown">
-        <button class="dropbtn">Menu</button>
-        <div class="dropdown-content">
-            <a href="Accueil.php">Accueil</a>
-            <a href="GestionCapteurs.php">Gestion de capteurs</a>
-            <a href="faq.php">FAQ</a>
-            <a href="cgu.php">CGU</a>
+    <?php if (!empty($_SESSION['user_id'])): ?>
+        <!-- Menu déroulant (visible uniquement quand connecté) -->
+        <div class="dropdown">
+            <button class="dropbtn">Menu</button>
+            <div class="dropdown-content">
+                <a href="accueil.php">Accueil</a>
+                <a href="gestionCapteurs.php">Gestion de capteurs</a>
+                <a href="faq.php">FAQ</a>
+                <a href="cgu.php">CGU</a>
+            </div>
         </div>
-    </div>
+    <?php endif; ?>
 
-    <a href="Accueil.php" class="logo-area">
+
+    <!-- Logo central -->
+    <a href="accueil.php" class="logo-area">
         <img src="GUSTEAU'S.jpg" alt="Logo Gusteau">
         <div class="logo-text">GUSTEAU'S RESTAURANT</div>
     </a>
 
+
     <div class="buttons">
-        <a href="logout.php" class="btn secondary">Déconnexion</a>
-        <a href="Profil.php">
+        <?php if (empty($_SESSION['user_id'])): ?>
+            <a href="inscription.php" class="btn">Inscription</a>
+            <a href="connexion.php"   class="btn">Connexion</a>
+        <?php else: ?>
+            <a href="logout.php"      class="btn secondary">Déconnexion</a>
+        <?php endif; ?>
+
+        <a href="profil.php">
             <img src="Profile.avif" alt="Profil" class="profile-icon">
         </a>
     </div>
+
 </header>
 
 <main>
@@ -179,29 +191,29 @@ if (empty($_SESSION['user_id'])) {
         <div class="sensor-cards">
             <!-- Capteurs… -->
             <div class="sensor-card">
-                <h3><a href="GestionCapteurLumiere.php" class="sensor-link">💡 Capteur de lumière</a></h3>
+                <h3><a href="gestionCapteurLumiere.php" class="sensor-link">💡 Capteur de lumière</a></h3>
                 <p>Valeur actuelle : -- lux</p>
-                <a href="GestionCapteurLumiere.php" class="btn secondary">Gérer ce capteur</a>
+                <a href="gestionCapteurLumiere.php" class="btn secondary">Gérer ce capteur</a>
             </div>
             <div class="sensor-card">
-                <h3><a href="GestionCapteurDistance.php" class="sensor-link">📏 Capteur de distance</a></h3>
+                <h3><a href="gestionCapteurDistance.php" class="sensor-link">📏 Capteur de distance</a></h3>
                 <p>Valeur actuelle : -- cm</p>
-                <a href="GestionCapteurDistance.php" class="btn secondary">Gérer ce capteur</a>
+                <a href="gestionCapteurDistance.php" class="btn secondary">Gérer ce capteur</a>
             </div>
             <div class="sensor-card">
-                <h3><a href="GestionCapteurSon.php" class="sensor-link">🔊 Capteur de son</a></h3>
+                <h3><a href="gestionCapteurSon.php" class="sensor-link">🔊 Capteur de son</a></h3>
                 <p>Valeur actuelle : -- dB</p>
-                <a href="GestionCapteurSon.php" class="btn secondary">Gérer ce capteur</a>
+                <a href="gestionCapteurSon.php" class="btn secondary">Gérer ce capteur</a>
             </div>
             <div class="sensor-card">
-                <h3><a href="GestionCapteurGaz.php" class="sensor-link">🛢️ Capteur de gaz</a></h3>
+                <h3><a href="gestionCapteurGaz.php" class="sensor-link">🛢️ Capteur de gaz</a></h3>
                 <p>Valeur actuelle : -- ppm</p>
-                <a href="GestionCapteurGaz.php" class="btn secondary">Gérer ce capteur</a>
+                <a href="gestionCapteurGaz.php" class="btn secondary">Gérer ce capteur</a>
             </div>
             <div class="sensor-card">
-                <h3><a href="GestionCapteurTempHum.php" class="sensor-link">🌡️ Capteur Température & Humidité</a></h3>
+                <h3><a href="gestionCapteurTempHum.php" class="sensor-link">🌡️ Capteur Température & Humidité</a></h3>
                 <p>Temp : -- °C<br>Humidité : -- %</p>
-                <a href="GestionCapteurTempHum.php" class="btn secondary">Gérer ce capteur</a>
+                <a href="gestionCapteurTempHum.php" class="btn secondary">Gérer ce capteur</a>
             </div>
         </div>
     </div>

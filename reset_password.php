@@ -127,7 +127,7 @@ try {
 
     <?php if ($success): ?>
         <p>Votre mot de passe a bien été réinitialisé.
-            <a href="Connexion.php">Connectez-vous</a>.
+            <a href="connexion.php">Connectez-vous</a>.
         </p>
     <?php else: ?>
         <?php if ($errors): ?>
@@ -149,7 +149,7 @@ try {
         </form>
     <?php endif; ?>
 
-    <a href="Connexion.php" class="back-link">← Retour à la connexion</a>
+    <a href="connexion.php" class="back-link">← Retour à la connexion</a>
 </div>
 <script>
     function validateReset() {
