@@ -163,6 +163,8 @@ if (empty($_SESSION['user_id'])) {
     <div class="valeur-lum">
         Luminosité actuelle : <span id="valeur">---</span>
     </div>
+    <div id="alerte-message" style="color: red; font-weight: bold; margin-top: 10px;"></div>
+
 
     <div class="etat" id="etat-eclairage">💡 Éclairage : —</div>
 
@@ -202,6 +204,7 @@ if (empty($_SESSION['user_id'])) {
     let seuilMaxLum = 1500;
 
 
+
     function fetchDataFromDatabase() {
         return fetch('./docs/getDataLum.php')
             .then(response => {
@@ -230,24 +233,33 @@ if (empty($_SESSION['user_id'])) {
     function simulerLectureCapteur(isManual) {
         fetchDataFromDatabase()
             .then(datas => {
-                const val = datas.data;
+                const val = parseFloat(datas.data);
                 console.log('Lecture capteur de lumière:', val);
-                // const val = Math.floor(Math.random() * 1000);
+
                 document.getElementById('valeur').textContent = val + ' lux';
-                const seuil = parseInt(document.getElementById('seuil').value, 10);
-                if (!isManual && document.getElementById('auto').checked && !eclairageManuel) {
-                    if (val < seuil) {
+                const modeAuto = document.getElementById('auto').checked;
+
+                if (!isManual && modeAuto && !eclairageManuel) {
+                    if (val < 350) {
                         document.getElementById('etat-eclairage').textContent =
                             '💡 Éclairage : ON (auto)';
-                    } else if (val > seuil && val < seuilMaxLum) {
-                        ;
+                        fetch('alerte_lumiere.php?type=on')
+                            .then(response => response.text())
+                            .then(msg => console.log('📧 Mail ON envoyé :', msg))
+                            .catch(err => console.error('❌ Erreur mail ON :', err));
+                    } else if (val > 1500) {
+                        document.getElementById('etat-eclairage').textContent =
+                            '💡 Éclairage : OFF (auto)';
+                        fetch('alerte_lumiere.php?type=off')
+                            .then(response => response.text())
+                            .then(msg => console.log('📧 Mail OFF envoyé :', msg))
+                            .catch(err => console.error('❌ Erreur mail OFF :', err));
                     } else {
                         document.getElementById('etat-eclairage').textContent =
                             '💡 Éclairage : OFF (auto)';
                     }
-                    // document.getElementById('etat-eclairage').textContent =
-                    //     '💡 Éclairage : ' + (val < seuil ? 'ON (auto)' : 'OFF (auto)');
                 }
+
                 const now = new Date().toLocaleTimeString();
                 logs.unshift(`${now} – ${val} lux`);
                 logs = logs.slice(0, 5);
@@ -256,6 +268,9 @@ if (empty($_SESSION['user_id'])) {
                 updateGraph(now, val);
             });
     }
+
+
+
 
     function toggleEclairageManuel() {
         eclairageManuel = !eclairageManuel;
