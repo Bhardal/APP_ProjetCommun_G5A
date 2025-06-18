@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telephone = htmlspecialchars(trim($_POST['telephone'] ?? ''));
     $p1     = $_POST['password'] ?? '';
     $p2     = $_POST['confirm-password'] ?? '';
+    $notifications = isset($_POST['notifications']) ? 1 : 0;
 
     if ($nom === '' || $prenom === '') {
         $errors[] = "Nom et prénom obligatoires.";
@@ -54,10 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $hash = password_hash($p1, PASSWORD_DEFAULT);
             $stmt = $pdo->prepare(
-                "INSERT INTO users (nom, prenom, email, telephone, password)
-    VALUES (?, ?, ?, ?, ?)"
+                "INSERT INTO users (nom, prenom, email, telephone, password, notifications_active)
+    VALUES (?, ?, ?, ?, ?, ?)"
             );
-            $stmt->execute([$nom, $prenom, $email, $telephone, $hash]);
+            $stmt->execute([$nom, $prenom, $email, $telephone, $hash, $notifications]);
 
 
             // redirige vers la page de connexion
@@ -318,6 +319,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <label for="confirm-password">Confirmer le mot de passe</label>
         <input type="password" id="confirm-password" name="confirm-password" required>
+
+        <div style="display: flex; align-items: center; margin-top: 15px;">
+            <input type="checkbox" id="notif-checkbox" name="notifications" value="1" checked style="margin: 0 10px 0 0; width: 16px; height: 16px;">
+            <label for="notif-checkbox" style="margin: 0; font-size: 14px;">Je souhaite recevoir les notifications par mail</label>
+        </div>
 
         <button type="submit">S'inscrire</button>
     </form>
