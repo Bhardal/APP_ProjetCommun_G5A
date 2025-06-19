@@ -19,13 +19,18 @@ if (empty($_SESSION['user_id'])) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT email, prenom FROM users WHERE id = ?");
+$stmt = $pdo->prepare("SELECT email, prenom, notifications_active FROM users WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
 
 if (!$user) {
     http_response_code(404);
     echo "Utilisateur non trouvé";
+    exit;
+}
+
+if (!$user['notifications_active']) {
+    echo "🔕 Notifications désactivées pour cet utilisateur. Aucun mail envoyé.";
     exit;
 }
 
