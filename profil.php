@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prenom = htmlspecialchars(trim($_POST['prenom'] ?? ''));
     $email  = htmlspecialchars(filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL));
     $telephone = htmlspecialchars(trim($_POST['telephone'] ?? ''));
+    $notifications = isset($_POST['notifications']) ? 1 : 0;
 
     if ($nom === '' || $prenom === '') {
         $errors[] = 'Nom et prénom obligatoires.';
@@ -35,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $stmt = $pdo->prepare("
     UPDATE users
-    SET nom = :nom, prenom = :prenom, email = :email, telephone = :telephone
+    SET nom = :nom, prenom = :prenom, email = :email, telephone = :telephone, notifications_active = :notifications
     WHERE id = :id
 ");
             $stmt->execute([
@@ -43,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':prenom'    => $prenom,
                 ':email'     => $email,
                 ':telephone' => $telephone,
+                ':notifications' => $notifications,
                 ':id'        => $userId,
             ]);
 
@@ -55,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Rechargement des infos utilisateur
 try {
-    $stmt = $pdo->prepare("SELECT nom, prenom, email, telephone, created_at FROM users WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT nom, prenom, email, telephone, created_at, notifications_active FROM users WHERE id = ?");
     $stmt->execute([$userId]);
     $user = $stmt->fetch();
 
@@ -314,6 +316,12 @@ try {
 
                 <label>Inscrit le</label>
                 <input type="text" value="<?= htmlspecialchars($user['created_at']) ?>" disabled>
+
+                <!-- Case à cocher : notifications -->
+                <div style="display: flex; align-items: center; margin-top: 15px;">
+                    <input type="checkbox" id="notifications" name="notifications" value="1" <?= $user['notifications_active'] ? 'checked' : '' ?> style="margin: 0 10px 0 0; width: 16px; height: 16px;">
+                    <label for="notifications" style="margin: 0; font-size: 14px;">Je souhaite recevoir les notifications par mail</label>
+                </div>
 
                 <button type="submit">Enregistrer les modifications</button>
             </form>
