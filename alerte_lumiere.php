@@ -34,6 +34,8 @@ if (!$user['notifications_active']) {
     exit;
 }
 
+
+
 $mail = new PHPMailer(true);
 
 try {

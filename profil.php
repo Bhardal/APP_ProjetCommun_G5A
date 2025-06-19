@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telephone = htmlspecialchars(trim($_POST['telephone'] ?? ''));
     $notifications = isset($_POST['notifications']) ? 1 : 0;
 
+
     if ($nom === '' || $prenom === '') {
         $errors[] = 'Nom et prénom obligatoires.';
     }

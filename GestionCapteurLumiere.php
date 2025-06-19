@@ -234,7 +234,16 @@ if (empty($_SESSION['user_id'])) {
     <div class="controls">
         <button class="btn" onclick="simulerLectureCapteur(false)">Lire le capteur</button>
         <button class="btn" onclick="toggleEclairageManuel()">ON/OFF manuel</button>
-        <label>Seuil : <input type="number" id="seuil" value="350"> lux</label>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 10px;">
+            <div>
+                <label for="seuilMin" style="font-weight: bold;">Seuil min :</label>
+                <input type="number" id="seuilMin" value="350" style="width: 80px; margin-left: 10px;">
+            </div>
+            <div>
+                <label for="seuilMax" style="font-weight: bold;">Seuil max :</label>
+                <input type="number" id="seuilMax" value="1500" style="width: 80px; margin-left: 10px;">
+            </div>
+        </div>
     </div>
 
     <div class="checkbox">
@@ -299,28 +308,27 @@ if (empty($_SESSION['user_id'])) {
                 console.log('Lecture capteur de lumière:', val);
                 // const val = Math.floor(Math.random() * 1000);
                 document.getElementById('valeur').textContent = val + ' lux';
-                const seuil = parseInt(document.getElementById('seuil').value, 10);
+                const seuilMin = parseInt(document.getElementById('seuilMin').value, 10);
+                const seuilMax = parseInt(document.getElementById('seuilMax').value, 10);
+
                 if (!isManual && document.getElementById('auto').checked && !eclairageManuel) {
-                    if (val < seuil) {
-                        document.getElementById('etat-eclairage').textContent =
-                            '💡 Éclairage : ON (auto)';
+                    if (val < seuilMin) {
+                        document.getElementById('etat-eclairage').textContent = '💡 Éclairage : ON (auto)';
                         fetch('alerte_lumiere.php?type=on')
                             .then(response => response.text())
                             .then(msg => console.log('📧 Mail ON envoyé :', msg))
                             .catch(err => console.error('❌ Erreur mail ON :', err));
-                    } else if (val > seuil && val < seuilMaxLum) {
-                        ;
-                    } else {
-                        document.getElementById('etat-eclairage').textContent =
-                            '💡 Éclairage : OFF (auto)';
+                    } else if (val > seuilMax) {
+                        document.getElementById('etat-eclairage').textContent = '💡 Éclairage : OFF (auto)';
                         fetch('alerte_lumiere.php?type=off')
                             .then(response => response.text())
                             .then(msg => console.log('📧 Mail OFF envoyé :', msg))
                             .catch(err => console.error('❌ Erreur mail OFF :', err));
+                    } else {
+                        document.getElementById('etat-eclairage').textContent = '💡 Éclairage : OFF (auto)';
                     }
-                    // document.getElementById('etat-eclairage').textContent =
-                    //     '💡 Éclairage : ' + (val < seuil ? 'ON (auto)' : 'OFF (auto)');
                 }
+
                 const now = new Date().toLocaleTimeString();
                 logs.unshift(`${now} – ${val} lux`);
                 logs = logs.slice(0, 5);
