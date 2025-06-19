@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body {
             background: url("Resto.png") no-repeat center center fixed;
             background-size: cover;
-            height:100vh;
+            /* height:100vh; */
         }
         header {
             background-color: white;
