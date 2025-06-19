@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
             // redirige vers la page de connexion
-            header("Location: Connexion.php?registered=1");
+            header("Location: connexion.php?registered=1");
             exit;
         } catch(PDOException $e){
             echo "Erreur de connexion à la base de donnée : " . $e->getMessage();
